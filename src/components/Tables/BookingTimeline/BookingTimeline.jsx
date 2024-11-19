@@ -72,7 +72,10 @@ const BookingTimeline = () => {
     setItems(newItems);
   };
 
-  const selectHandler = (itemId, e, time) => {
+  const selectHandler = (itemId, e, time, timelineEntries) => {
+    const currentEntry = timelineEntries.filter((entry)=>{
+      return entry.id===itemId
+    })
     setSelectedBooking(e.target.textContent);
   };
 
@@ -93,7 +96,6 @@ const BookingTimeline = () => {
       start_time: moment(bookingInfo.time),
       end_time: moment(bookingInfo.time).add(1, "hour"),
     });
-    console.log(newItems);
     setItems(newItems);
   };
 
@@ -113,7 +115,7 @@ const BookingTimeline = () => {
         defaultTimeEnd={moment().add(12, "hour")}
         minZoom={60 * 60 * 1000}
         maxZoom={365.24 * 86400 * 1000}
-        onItemSelect={selectHandler}
+        onItemSelect={(itemId, e, time)=>{selectHandler(itemId, e, time, timelineEntries)}}
       />
       <p>Selected booking: {selectedBooking}</p>
       <p>New booking (restraunt side)</p>
