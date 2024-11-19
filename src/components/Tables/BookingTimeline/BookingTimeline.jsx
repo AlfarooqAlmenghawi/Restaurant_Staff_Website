@@ -6,16 +6,9 @@ import SelectedBooking from "../Selected/SelectedBooking";
 import SelectedTable from "../Selected/SelectedTable";
 import supabase from "../../../../supabaseClient";
 
-
-
 const BookingTimeline = () => {
-  supabase
-    .from("tables")
-    .select()
-    .eq("restaurant_id", "1")
-    .then(({ data }) => {
-      console.log(data);
-    });
+  const [tables, setTables] = useState([]);
+  const [bookings, setBookings] = useState([]);
 
   const [items, setItems] = useState([
     {
@@ -53,22 +46,35 @@ const BookingTimeline = () => {
 
   const [selectedTable, setSelectedTable] = useState({});
 
-  const tables = [
-    { table_id: 1, table_label: "table 1" },
-    { table_id: 2, table_label: "table 2" },
-    { table_id: 3, table_label: "table 3" },
-  ];
-
   const [timelineEntries, setTimelineEntries] = useState([]);
 
   useEffect(() => {
-    const bookingArr = items.map((booking) => {
+    supabase
+      .from("tables")
+      .select("*, bookings(*)")
+      .eq("restaurant_id", "1")
+      .then(({ data }) => {
+        console.table(data);
+        setTables(data);
+        let totalBookingsOfRestaurant = [];
+        for (let i = 0; i < data.length; i++) {
+          totalBookingsOfRestaurant = totalBookingsOfRestaurant.concat(
+            data[i].bookings
+          );
+        }
+        console.table(totalBookingsOfRestaurant);
+        setBookings(totalBookingsOfRestaurant);
+      });
+  }, []);
+
+  useEffect(() => {
+    const bookingArr = bookings.map((booking) => {
       return {
-        id: booking.id,
-        group: booking.table,
-        title: booking.username,
-        start_time: booking.start_time,
-        end_time: booking.end_time,
+        id: booking.booking_id,
+        group: booking.table_id,
+        title: booking.user_id,
+        start_time: booking.duration[0],
+        end_time: booking.duration[1],
         canMove: false,
         canResize: false,
       };
@@ -140,7 +146,7 @@ const BookingTimeline = () => {
                 }}
                 value={table.table_id}
               >
-                {table.table_label}
+                {table.table_name}
               </button>
             ),
           };

@@ -1,7 +1,8 @@
 function SelectedTable({ selectedTable }) {
+  console.log(selectedTable);
   return (
     <div>
-      <p>{selectedTable.table_label}</p>
+      <p>table: {selectedTable.table_name}</p>
     </div>
   );
 }
