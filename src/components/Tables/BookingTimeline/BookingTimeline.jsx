@@ -4,8 +4,19 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import SelectedBooking from "../Selected/SelectedBooking";
 import SelectedTable from "../Selected/SelectedTable";
+import supabase from "../../../../supabaseClient";
+
+
 
 const BookingTimeline = () => {
+  supabase
+    .from("tables")
+    .select()
+    .eq("restaurant_id", "1")
+    .then(({ data }) => {
+      console.log(data);
+    });
+
   const [items, setItems] = useState([
     {
       id: 1,
@@ -83,18 +94,15 @@ const BookingTimeline = () => {
     const currentEntry = items.filter((entry) => {
       return entry.id === itemId;
     });
-    
+
     setSelectedBooking(currentEntry[0]);
     setTypeSelected(1);
   };
 
   const selectTableHandler = (e, tables) => {
-    console.log(tables)
-    console.log(e.target.value)
     const currentTable = tables.filter((table) => {
-      return table.table_id === e.target.value ;
+      return Number(table.table_id) === Number(e.target.value);
     });
-    console.log(currentTable)
     setSelectedTable(currentTable[0]);
     setTypeSelected(2);
   };
