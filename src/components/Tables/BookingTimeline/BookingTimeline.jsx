@@ -8,6 +8,7 @@ import supabase from "../../../../supabaseClient";
 
 const BookingTimeline = () => {
   const [tables, setTables] = useState([]);
+
   const [bookings, setBookings] = useState([]);
 
   const [items, setItems] = useState([
@@ -54,42 +55,50 @@ const BookingTimeline = () => {
       .select("*, bookings(*)")
       .eq("restaurant_id", "1")
       .then(({ data }) => {
-        console.table(data);
-        setTables(data);
+        return Promise.all(data);
+      })
+      .then((data) => {
         let totalBookingsOfRestaurant = [];
         for (let i = 0; i < data.length; i++) {
           totalBookingsOfRestaurant = totalBookingsOfRestaurant.concat(
             data[i].bookings
           );
         }
-        console.table(totalBookingsOfRestaurant);
-        setBookings(totalBookingsOfRestaurant);
+        const allTables = data.map((table) => {
+          return {
+            id: table.table_id,
+            title: (
+              <button
+                onClick={(e) => {
+                  selectTableHandler(e, data);
+                }}
+                value={table.table_id}
+              >
+                {table.table_name}
+              </button>
+            ),
+          };
+        });
+        return [totalBookingsOfRestaurant, allTables];
+      })
+      .then(([bookings, allTables]) => {
+        const bookingArr = bookings.map((booking) => {
+          return {
+            id: booking.booking_id,
+            group: booking.table_id,
+            title: "booking",
+            start_time: moment(booking.duration.slice(2, 24)),
+            end_time: moment(booking.duration.slice(27, 49)),
+            canMove: false,
+            canResize: false,
+          };
+        });
+        return Promise.all([bookingArr, setTables(allTables)]);
+      })
+      .then(([bookingArr]) => {
+        return setTimelineEntries(bookingArr);
       });
   }, []);
-
-  console.log(
-    '["2024-11-20 18:00:00+00","2024-11-20 19:30:00+00"]'.slice(2, 24)
-  );
-  console.log(
-    moment('["2024-11-20 18:00:00+00","2024-11-20 19:30:00+00"]'.slice(2, 24))
-  );
-
-  useEffect(() => {
-    const bookingArr = bookings.map((booking) => {
-      return {
-        id: booking.booking_id,
-        group: booking.table_id,
-        title: booking.user_id,
-        start_time: moment(booking.duration.slice(2, 24)),
-        end_time: moment(booking.duration.slice(27, 49)),
-        canMove: false,
-        canResize: false,
-      };
-    });
-    setTimelineEntries(bookingArr);
-  }, [items]);
-
-  // ["2024-11-20 18:00:00+00","2024-11-20 19:30:00+00")
 
   const newBooking = () => {
     const newItems = [...items];
@@ -118,6 +127,7 @@ const BookingTimeline = () => {
     const currentTable = tables.filter((table) => {
       return Number(table.table_id) === Number(e.target.value);
     });
+
     setSelectedTable(currentTable[0]);
     setTypeSelected(2);
   };
@@ -144,31 +154,19 @@ const BookingTimeline = () => {
     <div>
       Bookings:
       <button onClick={newBooking}>Add new</button>
-      <Timeline
-        groups={tables.map((table) => {
-          return {
-            id: table.table_id,
-            title: (
-              <button
-                onClick={(e) => {
-                  selectTableHandler(e, tables);
-                }}
-                value={table.table_id}
-              >
-                {table.table_name}
-              </button>
-            ),
-          };
-        })}
-        items={timelineEntries}
-        defaultTimeStart={moment().add(-12, "hour")}
-        defaultTimeEnd={moment().add(12, "hour")}
-        minZoom={60 * 60 * 1000}
-        maxZoom={365.24 * 86400 * 1000}
-        onItemSelect={(itemId, e, time) => {
-          selectBookingHandler(itemId, e, time, items);
-        }}
-      />
+      {tables.length && timelineEntries.length && (
+        <Timeline
+          groups={tables}
+          items={timelineEntries}
+          defaultTimeStart={moment().add(-12, "hour")}
+          defaultTimeEnd={moment().add(12, "hour")}
+          minZoom={60 * 60 * 1000}
+          maxZoom={365.24 * 86400 * 1000}
+          onItemSelect={(itemId, e, time) => {
+            selectBookingHandler(itemId, e, time, items);
+          }}
+        />
+      )}
       <div>
         {typeSelected === 1 ? (
           <SelectedBooking selectedBooking={selectedBooking} />
