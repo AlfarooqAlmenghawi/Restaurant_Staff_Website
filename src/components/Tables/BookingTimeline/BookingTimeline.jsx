@@ -67,20 +67,29 @@ const BookingTimeline = () => {
       });
   }, []);
 
+  console.log(
+    '["2024-11-20 18:00:00+00","2024-11-20 19:30:00+00"]'.slice(2, 24)
+  );
+  console.log(
+    moment('["2024-11-20 18:00:00+00","2024-11-20 19:30:00+00"]'.slice(2, 24))
+  );
+
   useEffect(() => {
     const bookingArr = bookings.map((booking) => {
       return {
         id: booking.booking_id,
         group: booking.table_id,
         title: booking.user_id,
-        start_time: booking.duration[0],
-        end_time: booking.duration[1],
+        start_time: moment(booking.duration.slice(2, 24)),
+        end_time: moment(booking.duration.slice(27, 49)),
         canMove: false,
         canResize: false,
       };
     });
     setTimelineEntries(bookingArr);
   }, [items]);
+
+  // ["2024-11-20 18:00:00+00","2024-11-20 19:30:00+00")
 
   const newBooking = () => {
     const newItems = [...items];
