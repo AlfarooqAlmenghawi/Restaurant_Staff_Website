@@ -86,12 +86,9 @@ const BookingTimeline = () => {
   //type selected value refers to the type of selected item. 0=nothing(default), 1=booking item, 2=table
 
   const selectBookingHandler = (itemId, e, time, bookings) => {
-    console.log(itemId);
-    console.log(bookings);
     const currentEntry = bookings.filter((entry) => {
       return Number(entry.booking_id) === Number(itemId);
     });
-    console.log(currentEntry[0]);
     setSelectedBooking(currentEntry[0]);
     setTypeSelected(1);
   };
