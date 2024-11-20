@@ -11,36 +11,6 @@ const BookingTimeline = () => {
 
   const [bookings, setBookings] = useState([]);
 
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      table: 1,
-      username: "colins",
-      start_time: moment(),
-      end_time: moment().add(1, "hour"),
-    },
-    {
-      id: 2,
-      table: 2,
-      username: "Johnson",
-      start_time: moment().add(-0.5, "hour"),
-      end_time: moment().add(0.5, "hour"),
-    },
-    {
-      id: 3,
-      table: 1,
-      username: "jefferson",
-      start_time: moment().add(2, "hour"),
-      end_time: moment().add(3, "hour"),
-    },
-    {
-      id: 4,
-      table: 2,
-      username: "hooba",
-      start_time: new Date("2024-12-14T14:29:16"),
-      end_time: moment(new Date("2024-12-14T14:29:16")).add(1, "hour"),
-    },
-  ]);
   const [typeSelected, setTypeSelected] = useState(0);
 
   const [selectedBooking, setSelectedBooking] = useState({});
@@ -93,6 +63,7 @@ const BookingTimeline = () => {
             canResize: false,
           };
         });
+        setBookings(bookings);
         return Promise.all([bookingArr, setTables(allTables)]);
       })
       .then(([bookingArr]) => {
@@ -114,11 +85,13 @@ const BookingTimeline = () => {
 
   //type selected value refers to the type of selected item. 0=nothing(default), 1=booking item, 2=table
 
-  const selectBookingHandler = (itemId, e, time, items) => {
-    const currentEntry = items.filter((entry) => {
-      return entry.id === itemId;
+  const selectBookingHandler = (itemId, e, time, bookings) => {
+    console.log(itemId);
+    console.log(bookings);
+    const currentEntry = bookings.filter((entry) => {
+      return Number(entry.booking_id) === Number(itemId);
     });
-
+    console.log(currentEntry[0]);
     setSelectedBooking(currentEntry[0]);
     setTypeSelected(1);
   };
@@ -163,7 +136,7 @@ const BookingTimeline = () => {
           minZoom={60 * 60 * 1000}
           maxZoom={365.24 * 86400 * 1000}
           onItemSelect={(itemId, e, time) => {
-            selectBookingHandler(itemId, e, time, items);
+            selectBookingHandler(itemId, e, time, bookings);
           }}
         />
       )}
