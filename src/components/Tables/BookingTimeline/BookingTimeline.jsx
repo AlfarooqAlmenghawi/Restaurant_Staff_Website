@@ -7,6 +7,8 @@ import SelectedTable from "../Selected/SelectedTable";
 import supabase from "../../../../supabaseClient";
 
 const BookingTimeline = () => {
+  const [groups, setGroups] = useState([]);
+
   const [tables, setTables] = useState([]);
 
   const [bookings, setBookings] = useState([]);
@@ -28,6 +30,7 @@ const BookingTimeline = () => {
         return Promise.all(data);
       })
       .then((data) => {
+        setTables(data);
         let totalBookingsOfRestaurant = [];
         for (let i = 0; i < data.length; i++) {
           totalBookingsOfRestaurant = totalBookingsOfRestaurant.concat(
@@ -64,7 +67,7 @@ const BookingTimeline = () => {
           };
         });
         setBookings(bookings);
-        return Promise.all([bookingArr, setTables(allTables)]);
+        return Promise.all([bookingArr, setGroups(allTables)]);
       })
       .then(([bookingArr]) => {
         return setTimelineEntries(bookingArr);
@@ -85,16 +88,22 @@ const BookingTimeline = () => {
 
   //type selected value refers to the type of selected item. 0=nothing(default), 1=booking item, 2=table
 
-  const selectBookingHandler = (itemId, e, time, bookings) => {
+  const selectBookingHandler = (itemId, e, time, bookings, tables) => {
     const currentEntry = bookings.filter((entry) => {
       return Number(entry.booking_id) === Number(itemId);
     });
-    setSelectedBooking(currentEntry[0]);
+    const currentTable = tables.filter((table) => {
+      return Number(table.table_id) === currentEntry[0].table_id;
+    });
+    Promise.all([
+      setSelectedTable(currentTable[0]),
+      setSelectedBooking(currentEntry[0]),
+    ]);
     setTypeSelected(1);
   };
 
-  const selectTableHandler = (e, tables) => {
-    const currentTable = tables.filter((table) => {
+  const selectTableHandler = (e, groups) => {
+    const currentTable = groups.filter((table) => {
       return Number(table.table_id) === Number(e.target.value);
     });
 
@@ -124,22 +133,25 @@ const BookingTimeline = () => {
     <div>
       Bookings:
       <button onClick={newBooking}>Add new</button>
-      {tables.length && timelineEntries.length && (
+      {groups.length && timelineEntries.length && (
         <Timeline
-          groups={tables}
+          groups={groups}
           items={timelineEntries}
           defaultTimeStart={moment().add(-12, "hour")}
           defaultTimeEnd={moment().add(12, "hour")}
           minZoom={60 * 60 * 1000}
           maxZoom={365.24 * 86400 * 1000}
           onItemSelect={(itemId, e, time) => {
-            selectBookingHandler(itemId, e, time, bookings);
+            selectBookingHandler(itemId, e, time, bookings, tables);
           }}
         />
       )}
       <div>
         {typeSelected === 1 ? (
-          <SelectedBooking selectedBooking={selectedBooking} />
+          <SelectedBooking
+            selectedBooking={selectedBooking}
+            selectedTable={selectedTable}
+          />
         ) : typeSelected === 2 ? (
           <SelectedTable selectedTable={selectedTable} />
         ) : null}

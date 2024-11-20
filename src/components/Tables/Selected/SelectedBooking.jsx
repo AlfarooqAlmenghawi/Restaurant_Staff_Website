@@ -1,10 +1,10 @@
 import moment from "moment";
 
-function SelectedBooking({ selectedBooking }) {
+function SelectedBooking({ selectedBooking, selectedTable }) {
   return (
     <div id="selected-booking">
       <p>
-        Selected booking: {"username"}, table: {selectedBooking.table_id}, from{" "}
+        Selected booking: {"username"}, table: {selectedTable.table_name}, from{" "}
         {moment(selectedBooking.duration.slice(2, 24)).calendar()} to{" "}
         {moment(selectedBooking.duration.slice(27, 49)).calendar()} party size:{" "}
         {selectedBooking.party_size} {selectedBooking.extra_info}
