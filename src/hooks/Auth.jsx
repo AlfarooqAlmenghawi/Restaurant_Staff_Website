@@ -1,5 +1,6 @@
-import { createContext, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 import supabase from "../../supabaseClient";
+import { redirect } from "react-router-dom";
 
 const AuthContext = createContext({
   session: null,
@@ -42,7 +43,10 @@ export const AuthProvider = ({ children }) => {
   const value = {
     session,
     user,
-    signOut: () => supabase.auth.signOut(),
+    signOut: async (shouldRedirect) => {
+      const { error } = await supabase.auth.signOut();
+      shouldRedirect && redirect("/sign-in");
+    },
   };
 
   return (
