@@ -60,7 +60,7 @@ function BookingForm({ tables, selectedTable }) {
             extra_info: newBookingInfo.extra_info,
             party_size: newBookingInfo.party_size,
             type: reservationType,
-            duration: `[2024-11-20 ${startTime.hour}:${startTime.minute}:00+00,2024-11-20 ${endTime.hour}:${endTime.minute}:00+00)`,
+            duration: `[2024-11-21 ${startTime.hour}:${startTime.minute}:00+00,2024-11-21 ${endTime.hour}:${endTime.minute}:00+00)`,
           },
         ])
         .select()
