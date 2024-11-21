@@ -14,7 +14,6 @@ function App() {
         <Routes>
           <Route path="/test" element={<p>Other path</p>} />
           <Route path="/tables" element={<Tables />} />
-          <Route path="/profile" element={<ProfileEdit></ProfileEdit>}/>
         </Routes>
       </BrowserRouter>
     </>
