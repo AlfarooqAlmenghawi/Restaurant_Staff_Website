@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/Header/Header.jsx";
 import Tables from "./components/Tables/Tables.jsx";
+import ProfileEdit from "./components/ProfileEdit/ProfileEdit.jsx";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/test" element={<p>Other path</p>} />
           <Route path="/tables" element={<Tables />} />
+          <Route path="/profile" element={<ProfileEdit></ProfileEdit>}/>
         </Routes>
       </BrowserRouter>
     </>
