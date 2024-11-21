@@ -1,7 +1,9 @@
 function SelectedTable({ selectedTable }) {
   return (
     <div>
-      <p>table: {selectedTable.table_name}</p>
+      <p>Table: {selectedTable.table_name}</p>
+      <p>This table is a table for {selectedTable.size} people.</p>
+      {/* <button>Toggle Status</button> */}
     </div>
   );
 }
