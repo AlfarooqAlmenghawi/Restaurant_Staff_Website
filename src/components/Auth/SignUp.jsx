@@ -5,7 +5,7 @@ export const SignUp = () => {
   const returnedData = useActionData();
   return (
     <Form method="post" action="/sign-up">
-      {returnedData?.error.startsWith("Passwords") && (
+      {returnedData?.error.code.startsWith("Passwords") && (
         <p>Error: {returnedData.error}</p>
       )}
       {returnedData?.error.code === "email_exists" && (
@@ -15,14 +15,27 @@ export const SignUp = () => {
         </p>
       )}
       <label htmlFor="email" />
-      <input name="email" id="email" type="email" required />
+      <input
+        name="email"
+        id="email"
+        type="email"
+        placeholder="email"
+        required
+      />
       <label htmlFor="password" />
-      <input name="password" id="password" type="password" required />
+      <input
+        name="password"
+        id="password"
+        type="password"
+        placeholder="password"
+        required
+      />
       <label htmlFor="confirmPassword" />
       <input
         name="confirmPassword"
         id="confirmPassword"
         type="password"
+        placeholder="confirm password"
         required
       />
       <button type="submit">Submit</button>
@@ -34,7 +47,7 @@ export const signUpAction = async ({ request }) => {
   const submittedData = await request.formData();
   console.log("something");
   if (submittedData.get("password") !== submittedData.get("confirmPassword"))
-    return { error: "Passwords don't match" };
+    return { error: { code: "Passwords don't match" } };
   const submission = {
     email: submittedData.get("email"),
     password: submittedData.get("password"),
@@ -48,5 +61,5 @@ export const signUpAction = async ({ request }) => {
   });
   if (error) return { error };
 
-  return redirect("sign-in");
+  return redirect("/sign-in");
 };
