@@ -14,7 +14,7 @@ function Header() {
         <NavLink className="nav-item" to="/tables">
           Tables
         </NavLink>
-        <NavLink className="nav-item" to="/test2">
+        <NavLink className="heading-button" to="/profile">
           Manage Profile
         </NavLink>
         <NavLink className="nav-item" to="/test2">

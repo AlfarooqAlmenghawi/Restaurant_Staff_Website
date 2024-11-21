@@ -4,7 +4,8 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import SelectedBooking from "../Selected/SelectedBooking";
 import SelectedTable from "../Selected/SelectedTable";
-import supabase from "../../../../supabaseClient";
+import BookingForm from "../BookingForm/BookingForm.jsx";
+import supabase from "../../../../supabaseClient.js";
 
 const BookingTimeline = () => {
   const [groups, setGroups] = useState([]);
@@ -72,19 +73,80 @@ const BookingTimeline = () => {
       .then(([bookingArr]) => {
         return setTimelineEntries(bookingArr);
       });
-  }, []);
 
-  const newBooking = () => {
-    const newItems = [...items];
-    newItems.push({
-      id: 7,
-      table: 3,
-      username: "om",
-      start_time: moment().add(1, "hour"),
-      end_time: moment().add(2, "hour"),
-    });
-    setItems(newItems);
-  };
+    console.log("Supabase client:", supabase);
+    const commentsSubscription = supabase
+      .channel("bookings-channel")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "bookings",
+        },
+        (payload) => {
+          console.log("Booking change received!", payload);
+          supabase
+            .from("tables")
+            .select("*, bookings(*)")
+            .eq("restaurant_id", "1")
+            .then(({ data }) => {
+              return Promise.all(data);
+            })
+            .then((data) => {
+              setTables(data);
+              let totalBookingsOfRestaurant = [];
+              for (let i = 0; i < data.length; i++) {
+                totalBookingsOfRestaurant = totalBookingsOfRestaurant.concat(
+                  data[i].bookings
+                );
+              }
+              const allTables = data.map((table) => {
+                return {
+                  id: table.table_id,
+                  title: (
+                    <button
+                      onClick={(e) => {
+                        selectTableHandler(e, data);
+                      }}
+                      value={table.table_id}
+                    >
+                      {table.table_name}
+                    </button>
+                  ),
+                };
+              });
+              return [totalBookingsOfRestaurant, allTables];
+            })
+            .then(([bookings, allTables]) => {
+              const bookingArr = bookings.map((booking) => {
+                return {
+                  id: booking.booking_id,
+                  group: booking.table_id,
+                  title: "booking",
+                  start_time: moment(booking.duration.slice(2, 24)),
+                  end_time: moment(booking.duration.slice(27, 49)),
+                  canMove: false,
+                  canResize: false,
+                };
+              });
+              setBookings(bookings);
+              return Promise.all([bookingArr, setGroups(allTables)]);
+            })
+            .then(([bookingArr]) => {
+              return setTimelineEntries(bookingArr);
+            });
+        }
+      )
+      .subscribe((status) => {
+        console.log("Subscription status:", status);
+      });
+
+    // Clean up subscription when the component unmounts
+    return () => {
+      supabase.removeChannel(commentsSubscription);
+    };
+  }, []);
 
   //type selected value refers to the type of selected item. 0=nothing(default), 1=booking item, 2=table
 
@@ -111,28 +173,8 @@ const BookingTimeline = () => {
     setTypeSelected(2);
   };
 
-  const changeValue = (e) => {
-    const newInfo = { ...bookingInfo };
-    newInfo[e.target.id] = e.target.value;
-    setBookingInfo(newInfo);
-  };
-
-  const sendBooking = () => {
-    const newItems = [...items];
-    newItems.push({
-      id: 0,
-      table: Number(bookingInfo.table),
-      username: bookingInfo.name,
-      start_time: moment(bookingInfo.time),
-      end_time: moment(bookingInfo.time).add(1, "hour"),
-    });
-    setItems(newItems);
-  };
-
   return (
     <div>
-      Bookings:
-      <button onClick={newBooking}>Add new</button>
       {groups.length && timelineEntries.length && (
         <Timeline
           groups={groups}
@@ -156,26 +198,7 @@ const BookingTimeline = () => {
           <SelectedTable selectedTable={selectedTable} />
         ) : null}
       </div>
-      <p>New booking (restraunt side)</p>
-      <form>
-        <label>
-          Name
-          <input id="name" onChange={changeValue}></input>
-        </label>
-        <label>
-          Time
-          <input id="time" onChange={changeValue}></input>
-        </label>
-        <label>
-          Party size
-          <input id="size" onChange={changeValue}></input>
-        </label>
-        <label>
-          Table
-          <input id="table" onChange={changeValue}></input>
-        </label>
-      </form>
-      <button onClick={sendBooking}>Submit booking</button>
+      <BookingForm tables={tables} selectedTable={selectedTable} />
     </div>
   );
 };
