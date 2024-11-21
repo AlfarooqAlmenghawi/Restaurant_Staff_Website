@@ -7,6 +7,8 @@ function BookingForm({ tables, selectedTable }) {
 
   const [endTime, setEndTime] = useState("");
 
+  const [reservationType, setReservationType] = useState(null);
+
   const [newBookingInfo, setNewBookingInfo] = useState({});
 
   // useEffect(() => {
@@ -23,6 +25,17 @@ function BookingForm({ tables, selectedTable }) {
     console.log(newInfo);
   };
 
+  const changeReservationValue = (e) => {
+    console.log(e.target.value);
+    if (e.target.value === "walkin") {
+      console.log(1);
+      setReservationType(1);
+    } else if (e.target.value === "phone") {
+      console.log(2);
+      setReservationType(2);
+    }
+  };
+
   const changeStartTime = (value) => {
     setStartTime(value);
   };
@@ -30,6 +43,7 @@ function BookingForm({ tables, selectedTable }) {
   const changeEndTime = (value) => {
     setEndTime(value);
   };
+
   const sendBooking = () => {
     if (
       startTime.hour > endTime.hour ||
@@ -45,6 +59,7 @@ function BookingForm({ tables, selectedTable }) {
             table_id: newBookingInfo.table_id,
             extra_info: newBookingInfo.extra_info,
             party_size: newBookingInfo.party_size,
+            type: reservationType,
             duration: `[2024-11-20 ${startTime.hour}:${startTime.minute}:00+00,2024-11-20 ${endTime.hour}:${endTime.minute}:00+00)`,
           },
         ])
@@ -56,6 +71,26 @@ function BookingForm({ tables, selectedTable }) {
     }
   };
 
+  const addTest = () => {
+    supabase
+      .from("bookings")
+      .insert([
+        {
+          user_id: "da7f48cd-072c-4d34-b3c2-6f3147d725fc",
+          table_id: 2,
+          extra_info: "The frick this idiot swore at me on the phone",
+          party_size: 5,
+          type: 2,
+          duration: `[2024-11-20 20:15:00+00,2024-11-20 23:25:00+00)`,
+        },
+      ])
+      .select()
+      .then(({ data }) => {})
+      .catch(({ data, error }) => {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     const changedBookingInfo = { ...newBookingInfo };
     changedBookingInfo.table_id = selectedTable.table_id;
@@ -65,6 +100,7 @@ function BookingForm({ tables, selectedTable }) {
   return (
     <>
       {" "}
+      <button onClick={addTest}>Add raw data</button>
       <p>New booking (restraunt side)</p>
       <form>
         <label>
@@ -75,11 +111,6 @@ function BookingForm({ tables, selectedTable }) {
         <label>
           End Time
           <TimeInput onChange={changeEndTime} />
-        </label>
-        <br></br>
-        <label>
-          Party size
-          <input id="party_size" onChange={changeValue}></input>
         </label>
         <br></br>
         <label>
@@ -102,6 +133,23 @@ function BookingForm({ tables, selectedTable }) {
             })}
           </select>
         </label>
+        <label>
+          Reservation Type
+          <select id="reservation" onChange={changeReservationValue}>
+            <option>Select Here</option>
+            <option value="walkin" className="reservation-type">
+              Walk-In Reservation
+            </option>
+            <option value="phone" className="reservation-type">
+              Phone Call Reservation
+            </option>
+          </select>
+        </label>
+        <br></br>
+        <label>
+          Party size
+          <input id="party_size" onChange={changeValue}></input>
+        </label>
         <br></br>
         <label>
           Message
@@ -109,7 +157,7 @@ function BookingForm({ tables, selectedTable }) {
         </label>
         <br></br>
       </form>
-      <button onClick={sendBooking}>Submit booking</button>
+      <button onClick={sendBooking}>Submit Booking</button>
     </>
   );
 }

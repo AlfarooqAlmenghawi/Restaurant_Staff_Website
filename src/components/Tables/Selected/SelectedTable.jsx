@@ -2,8 +2,8 @@ function SelectedTable({ selectedTable }) {
   return (
     <div>
       <p>Table: {selectedTable.table_name}</p>
-      <p>Table Number: {selectedTable.table_id}</p>
-      <button>Toggle Status</button>
+      <p>This table is a table for {selectedTable.size} people.</p>
+      {/* <button>Toggle Status</button> */}
     </div>
   );
 }
