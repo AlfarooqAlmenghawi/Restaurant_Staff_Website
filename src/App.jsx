@@ -13,6 +13,7 @@ import { SignIn } from "./components/Auth/SignIn.jsx";
 import { AuthProvider } from "./hooks/Auth.jsx";
 import { RootLayout } from "./layouts/RootLayout.jsx";
 import { signInAction } from "./components/Auth/SignIn.jsx";
+import { SignUp, signUpAction } from "./components/Auth/SignUp.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
       <Route path="test" element={<p>Other path</p>} />
       <Route path="tables" element={<Tables />} />
       <Route path="sign-in" element={<SignIn />} action={signInAction} />
+      <Route path="sign-up" element={<SignUp />} action={signUpAction} />
     </Route>
   )
 );

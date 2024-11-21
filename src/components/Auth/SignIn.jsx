@@ -9,26 +9,20 @@ import { useAuth } from "../../hooks/Auth";
 import { isAuthError } from "@supabase/supabase-js";
 
 export const SignIn = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const redirectPath = searchParams.get("redirectPath")?.replace("%2F", "/");
   const { session } = useAuth;
-  const { error, clearForm } = useActionData;
+  const returnedFormData = useActionData();
   if (session) redirect(redirectPath);
   return (
     <Form method="post" action="/sign-in">
-      {isAuthError(error) && error.code === "invalid_credentials" && (
+      {returnedFormData?.error && (
         <p>Invalid credentials. Please check your details and try again.</p>
       )}
       <label htmlFor="email" />
       <input name="email" id="email" type="email" required />
       <label htmlFor="password" />
-      <input
-        name="password"
-        id="password"
-        type="password"
-        value={clearForm && ""}
-        required
-      />
+      <input name="password" id="password" type="password" required />
       <input name="redirectPath" readOnly hidden value={redirectPath} />
       <button type="submit">Submit</button>
     </Form>
