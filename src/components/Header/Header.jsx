@@ -12,7 +12,7 @@ function Header() {
         <Link className="heading-button" to="/tables">
           Tables
         </Link>
-        <Link className="heading-button" to="/test2">
+        <Link className="heading-button" to="/profile">
           Manage Profile
         </Link>
         <Link className="heading-button" to="/test2">
