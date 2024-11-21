@@ -9,6 +9,13 @@ function BookingForm({ tables, selectedTable }) {
 
   const [newBookingInfo, setNewBookingInfo] = useState({});
 
+  // useEffect(() => {
+  //   console.log(tables);
+  //   const defaultTable = { ...newBookingInfo };
+  //   defaultTable.table_id = tables[0].table_id;
+  //   setNewBookingInfo(defaultTable);
+  // }, [tables]);
+
   const changeValue = (e) => {
     const newInfo = { ...newBookingInfo };
     newInfo[e.target.id] = e.target.value;
@@ -17,32 +24,36 @@ function BookingForm({ tables, selectedTable }) {
   };
 
   const changeStartTime = (value) => {
-    console.log("value:", value);
-    setStartTime(`2024-11-20 ${value.hour}:${value.minute}:00+00`);
+    setStartTime(value);
   };
 
   const changeEndTime = (value) => {
-    console.log("value:", value);
-    setEndTime(`2024-11-20 ${value.hour}:${value.minute}:00+00`);
+    setEndTime(value);
   };
-
   const sendBooking = () => {
-    console.log(newBookingInfo);
-    supabase
-      .from("bookings")
-      .insert([
-        {
-          user_id: "da7f48cd-072c-4d34-b3c2-6f3147d725fc",
-          table_id: newBookingInfo.table_id,
-          extra_info: newBookingInfo.extra_info,
-          party_size: newBookingInfo.party_size,
-          duration: `[${startTime}, ${endTime})`,
-        },
-      ])
-      .select()
-      .then(({ data }) => {
-        console.log(data);
-      });
+    if (
+      startTime.hour > endTime.hour ||
+      (startTime.hour === endTime.hour && startTime.minute > endTime.minute)
+    ) {
+      console.log("Invalid time interval");
+    } else {
+      supabase
+        .from("bookings")
+        .insert([
+          {
+            user_id: "da7f48cd-072c-4d34-b3c2-6f3147d725fc",
+            table_id: newBookingInfo.table_id,
+            extra_info: newBookingInfo.extra_info,
+            party_size: newBookingInfo.party_size,
+            duration: `[2024-11-20 ${startTime.hour}:${startTime.minute}:00+00,2024-11-20 ${endTime.hour}:${endTime.minute}:00+00)`,
+          },
+        ])
+        .select()
+        .then(({ data }) => {})
+        .catch(({ data, error }) => {
+          console.log(error);
+        });
+    }
   };
 
   useEffect(() => {
