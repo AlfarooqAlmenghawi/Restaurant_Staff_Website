@@ -1,20 +1,35 @@
 import { useState } from "react";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Link,
+  RouterProvider,
+} from "react-router-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/Header/Header.jsx";
 import Tables from "./components/Tables/Tables.jsx";
+import { SignIn } from "./components/Auth/SignIn.jsx";
+import { AuthProvider } from "./hooks/Auth.jsx";
+import { RootLayout } from "./layouts/RootLayout.jsx";
+import { signInAction } from "./components/Auth/SignIn.jsx";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<RootLayout />}>
+      <Route path="test" element={<p>Other path</p>} />
+      <Route path="tables" element={<Tables />} />
+      <Route path="sign-in" element={<SignIn />} action={signInAction} />
+    </Route>
+  )
+);
 
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/test" element={<p>Other path</p>} />
-          <Route path="/tables" element={<Tables />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </>
   );
 }
