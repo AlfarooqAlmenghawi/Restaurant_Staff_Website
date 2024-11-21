@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/Header/Header.jsx";
 import Tables from "./components/Tables/Tables.jsx";
-import ProfileEdit from "./components/ProfileEdit/ProfileEdit.jsx";
 
 function App() {
   return (
