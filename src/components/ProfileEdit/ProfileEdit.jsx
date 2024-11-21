@@ -8,13 +8,14 @@ function ProfileEdit() {
 
   const [cuisines, setCuisines] = useState([]);
 
+  const [old, setOld] = useState({ restaurant_cuisines: [] });
+
   const sendProfile = () => {
     const sendData = { ...current };
-    const newCusines = [...current.restaurant_cuisines];
+    const newCuisines = [...current.restaurant_cuisines];
     if (sendData.restaurant_cuisines.length) {
       delete sendData.restaurant_cuisines;
     }
-
     supabase
       .from("restaurants")
       .update([sendData])
@@ -30,7 +31,7 @@ function ProfileEdit() {
       .then(() => {
         supabase
           .from("restaurant_cuisines")
-          .insert(newCusines)
+          .insert(newCuisines)
           .select()
           .then(({ data, error }) => {});
       });
@@ -48,7 +49,11 @@ function ProfileEdit() {
 
   const changeCurr = (e) => {
     const newCurrent = { ...current };
-    newCurrent[e.target.id] = e.target.value;
+    if (e.target.value) {
+      newCurrent[e.target.id] = e.target.value;
+    } else {
+      newCurrent[e.target.id] = old[e.target.id];
+    }
     setCurrent(newCurrent);
   };
 
@@ -60,19 +65,16 @@ function ProfileEdit() {
 
   const addCuisine = (e) => {
     const newCurrent = { ...current };
-    const thisCuisine = cuisines.filter((cuisine) => {
-      return e.target.value === cuisine.cuisine_name;
-    });
-    const isDupe = false;
+    let isDupe = false;
     newCurrent.restaurant_cuisines.forEach((cuisine) => {
-      if (cuisine.cuisine_id === thisCuisine.cuisine_id) {
+      if (Number(cuisine.cuisine_id) === Number(e.target.value)) {
         isDupe = true;
       }
     });
     if (!isDupe) {
       newCurrent.restaurant_cuisines.push({
-        restaurant_id: HCRest,
-        cuisine_id: thisCuisine[0].cuisine_id,
+        restaunt_id: HCRest,
+        cuisine_id: e.target.value,
       });
       setCurrent(newCurrent);
     }
@@ -85,6 +87,7 @@ function ProfileEdit() {
       .eq("restaurant_id", HCRest)
       .then(({ data, error }) => {
         setCurrent(data[0]);
+        setOld(data[0]);
       });
     supabase
       .from("cuisines")
@@ -140,7 +143,7 @@ function ProfileEdit() {
                 <select onChange={addCuisine}>
                   {cuisines.map((cuisine) => {
                     return (
-                      <option key={cuisine.cuisine_id}>
+                      <option value={cuisine.cuisine_id}>
                         {
                           cuisines.filter((entry) => {
                             return entry.cuisine_id === cuisine.cuisine_id;
@@ -158,7 +161,7 @@ function ProfileEdit() {
                   <li key={current.restaurant_cuisines.indexOf(cuisine)}>
                     {
                       cuisines.filter((entry) => {
-                        return entry.cuisine_id === cuisine.cuisine_id;
+                        return entry.cuisine_id === Number(cuisine.cuisine_id);
                       })[0].cuisine_name
                     }
                     <button id={cuisine.cuisine_id} onClick={removeCuisine}>
@@ -197,7 +200,7 @@ function ProfileEdit() {
         <h4>Contact Details</h4>
         <label>
           Address
-          <input></input>
+          <input />
         </label>
         <label>
           Phone Number
