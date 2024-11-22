@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import supabase from "../../../supabaseClient";
 import { useAuth } from "../../hooks/Auth";
-import { NavLink } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function MyRestaurants() {
   const [restaurantsOfStaff, setRestaurantsOfStaff] = useState([]);
-  const { user } = useAuth();
-  console.log(user);
+  const { user, updateRestaurant } = useAuth();
+  const navigate = useNavigate();
+
+  function handleClick(event) {
+    updateRestaurant(event.target.id);
+    navigate("/profile");
+  }
 
   useEffect(() => {
     supabase
@@ -14,7 +19,6 @@ function MyRestaurants() {
       .select("restaurant_id, restaurants(*)")
       .eq("user_id", user?.id)
       .then(({ data }) => {
-        console.log(data);
         setRestaurantsOfStaff(data);
       });
   }, []);
@@ -28,7 +32,12 @@ function MyRestaurants() {
           return (
             <>
               <p>{restaurant.restaurants.restaurant_name}</p>
-              <NavLink>go to restaurant</NavLink>
+              <button
+                id={restaurant.restaurants.restaurant_id}
+                onClick={handleClick}
+              >
+                Go to {restaurant.restaurants.restaurant_name}
+              </button>
             </>
           );
         })}
