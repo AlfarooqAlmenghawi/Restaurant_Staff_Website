@@ -38,7 +38,7 @@ export const SignUp = () => {
         placeholder="confirm password"
         required
       />
-      <button type="submit">Submit</button>
+      <button type="submit">Sign Up</button>
     </Form>
   );
 };
@@ -61,5 +61,5 @@ export const signUpAction = async ({ request }) => {
   });
   if (error) return { error };
 
-  return redirect("/sign-in");
+  return redirect("/my-restaurants");
 };
