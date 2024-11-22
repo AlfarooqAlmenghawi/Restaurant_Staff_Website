@@ -33,6 +33,14 @@ export const AuthProvider = ({ children }) => {
       }
     );
 
+    const updateRestaurant = (restaurant_id) => {
+      setSession((currSession) => {
+        const updatedSession = { ...currSession };
+        updatedSession.restaurant_id = restaurant_id;
+        return updatedSession;
+      });
+    };
+
     setData();
 
     return () => {
@@ -43,6 +51,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     session,
     user,
+    updateRestaurant,
     signOut: async (shouldRedirect) => {
       const { error } = await supabase.auth.signOut();
       shouldRedirect && redirect("/sign-in");
