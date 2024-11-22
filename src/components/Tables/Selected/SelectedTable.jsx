@@ -3,7 +3,7 @@ function SelectedTable({ selectedTable }) {
     <div>
       <p>Table: {selectedTable.table_name}</p>
       <p>This table is a table for {selectedTable.size} people.</p>
-      {/* <button>Toggle Status</button> */}
+      <p>{selectedTable.bookingStatus}</p>
     </div>
   );
 }

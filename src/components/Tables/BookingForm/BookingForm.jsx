@@ -50,7 +50,6 @@ function BookingForm({ tables, selectedTable }) {
   };
 
   const sendBooking = () => {
-    console.log(newBookingInfo);
     let fullEndTime = null;
     if (endTime !== "") {
       fullEndTime = `2024-11-22 ${endTime.hour}:${endTime.minute}:00+00)`;
@@ -65,7 +64,6 @@ function BookingForm({ tables, selectedTable }) {
       setFailed(true);
       setFailedMSg("Need a group size!");
     } else if (newBookingInfo.party_size > bookingTableSize) {
-      console.log(bookingTableSize);
       setFailed(true);
       setFailedMSg("Group size is too big for the table!");
     } else {
@@ -116,7 +114,6 @@ function BookingForm({ tables, selectedTable }) {
         }
       });
     }
-    console.log(tableSize);
     setBookingTableSize(tableSize);
   }, [newBookingInfo]);
 

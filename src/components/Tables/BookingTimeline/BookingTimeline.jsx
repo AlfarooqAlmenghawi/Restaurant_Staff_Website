@@ -35,7 +35,6 @@ const BookingTimeline = () => {
         return Promise.all(data);
       })
       .then((data) => {
-        console.log(data);
         setTables(data);
         let totalBookingsOfRestaurant = [];
         for (let i = 0; i < data.length; i++) {
@@ -164,8 +163,7 @@ const BookingTimeline = () => {
     setTypeSelected(1);
   };
 
-  const selectTableHandler = (e) => {
-    console.log(tables);
+  const selectTableHandler = (e, tables) => {
     const currentTable = tables.filter((table) => {
       return Number(table.table_id) === Number(e.target.value);
     })[0];
