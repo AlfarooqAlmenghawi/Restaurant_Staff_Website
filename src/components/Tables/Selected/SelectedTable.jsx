@@ -2,18 +2,17 @@ import moment from "moment";
 import { useAuth } from "../../../hooks/Auth";
 import supabase from "../../../../supabaseClient";
 
-function SelectedTable({ selectedTable, setSelectedTable }) {
+function SelectedTable({ selectedTable, setSelectedTable, setUpdater }) {
   const { user } = useAuth();
-
+  
   const freeTableHandler = () => {
     supabase
       .rpc("update_end_time", {
         this_booking_id: selectedTable.bookingStatus,
       })
       .then((data, error) => {
-        selectedTable.bookingStatus = 0;
-        console.log(data);
-        console.log(error);
+        const newUpdate = selectedTable.table_id;
+        setUpdater(newUpdate);
       });
   };
 
@@ -29,6 +28,7 @@ function SelectedTable({ selectedTable, setSelectedTable }) {
         chosen_restaurant_id: 1,
       })
       .then(({ data, error }) => {
+        setUpdater(selectedTable.bookingStatus);
         console.error(error);
       });
   };

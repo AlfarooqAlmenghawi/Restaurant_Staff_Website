@@ -12,7 +12,6 @@ import BookingForm from "../BookingForm/BookingForm.jsx";
 import supabase from "../../../../supabaseClient.js";
 
 const BookingTimeline = () => {
-
   const [groups, setGroups] = useState([]);
 
   const [tables, setTables] = useState([]);
@@ -26,6 +25,8 @@ const BookingTimeline = () => {
   const [selectedTable, setSelectedTable] = useState({});
 
   const [timelineEntries, setTimelineEntries] = useState([]);
+
+  const [updater, setUpdater] = useState(0);
 
   useEffect(() => {
     supabase
@@ -81,74 +82,77 @@ const BookingTimeline = () => {
       });
 
     console.log("Supabase client:", supabase);
-    const commentsSubscription = supabase
-      .channel("bookings-channel")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "bookings",
-        },
-        (payload) => {
-          console.log("Booking change received!", payload);
-          supabase
-            .from("tables")
-            .select("*, bookings(*)")
-            .eq("restaurant_id", "1")
-            .then(({ data }) => {
-              return Promise.all(data);
-            })
-            .then((data) => {
-              console.log("subscription", data);
-              setTables(data);
-              let totalBookingsOfRestaurant = [];
-              for (let i = 0; i < data.length; i++) {
-                totalBookingsOfRestaurant = totalBookingsOfRestaurant.concat(
-                  data[i].bookings
-                );
-              }
-              const allTables = data.map((table) => {
-                return {
-                  id: table.table_id,
-                  title: (
-                    <button onClick={selectTableHandler} value={table.table_id}>
-                      {table.table_name}
-                    </button>
-                  ),
-                };
-              });
-              return [totalBookingsOfRestaurant];
-            })
-            .then(([bookings]) => {
-              const bookingArr = bookings.map((booking) => {
-                return {
-                  id: booking.booking_id,
-                  group: booking.table_id,
-                  title: "booking",
-                  start_time: moment(booking.duration.slice(2, 24)),
-                  end_time: moment(booking.duration.slice(27, 49)),
-                  canMove: false,
-                  canResize: false,
-                };
-              });
-              setBookings(bookings);
-              return Promise.all([bookingArr]);
-            })
-            .then(([bookingArr]) => {
-              return setTimelineEntries(bookingArr);
-            });
-        }
-      )
-      .subscribe((status) => {
-        console.log("Subscription status:", status);
-      });
+    
+  }, [updater]);
 
-    // Clean up subscription when the component unmounts
-    return () => {
-      supabase.removeChannel(commentsSubscription);
-    };
-  }, []);
+  useEffect(()=>{const commentsSubscription = supabase
+    .channel("bookings-channel")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "bookings",
+      },
+      (payload) => {
+        console.log("Booking change received!", payload);
+        supabase
+          .from("tables")
+          .select("*, bookings(*)")
+          .eq("restaurant_id", "1")
+          .then(({ data }) => {
+            return Promise.all(data);
+          })
+          .then((data) => {
+            console.log("subscription", data);
+            setTables(data);
+            let totalBookingsOfRestaurant = [];
+            for (let i = 0; i < data.length; i++) {
+              totalBookingsOfRestaurant = totalBookingsOfRestaurant.concat(
+                data[i].bookings
+              );
+            }
+            const allTables = data.map((table) => {
+              return {
+                id: table.table_id,
+                title: (
+                  <button onClick={selectTableHandler} value={table.table_id}>
+                    {table.table_name}
+                  </button>
+                ),
+              };
+            });
+            return [totalBookingsOfRestaurant, allTables];
+          })
+          .then(([bookings]) => {
+            const bookingArr = bookings.map((booking) => {
+              return {
+                id: booking.booking_id,
+                group: booking.table_id,
+                title: "booking",
+                start_time: moment(booking.duration.slice(2, 24)),
+                end_time: moment(booking.duration.slice(27, 49)),
+                canMove: false,
+                canResize: false,
+              };
+            });
+            setBookings(bookings);
+            return Promise.all([bookingArr]);
+          })
+          .then(([bookingArr]) => {
+            return setTimelineEntries(bookingArr);
+          });
+      }
+    )
+    .subscribe((status) => {
+      console.log("Subscription status:", status);
+    });
+    console.log("update")
+  // Clean up subscription when the component unmounts
+  return () => {
+    supabase.removeChannel(commentsSubscription);
+  };
+  })
 
   //type selected value refers to the type of selected item. 0=nothing(default), 1=booking item, 2=table
 
@@ -209,11 +213,13 @@ const BookingTimeline = () => {
           <SelectedBooking
             selectedBooking={selectedBooking}
             selectedTable={selectedTable}
+            setTypeSelected={setTypeSelected}
           />
         ) : typeSelected === 2 ? (
           <SelectedTable
             selectedTable={selectedTable}
             setSelectedTable={setSelectedTable}
+            setUpdater={setUpdater}
           />
         ) : null}
       </div>

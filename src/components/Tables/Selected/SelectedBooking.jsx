@@ -2,7 +2,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import supabase from "../../../../supabaseClient.js";
 
-function SelectedBooking({ selectedBooking, selectedTable }) {
+function SelectedBooking({ selectedBooking, selectedTable, setTypeSelected }) {
   const [bookingExistence, setBookingExistence] = useState(true);
 
   const [bookingType, setBookingType] = useState("");
@@ -18,6 +18,7 @@ function SelectedBooking({ selectedBooking, selectedTable }) {
         } else {
           setBookingExistence(false);
         }
+        setTypeSelected(0)
       })
       .catch((error) => {
         console.error("Delete Failed: ", error);
