@@ -12,6 +12,7 @@ import BookingForm from "../BookingForm/BookingForm.jsx";
 import supabase from "../../../../supabaseClient.js";
 
 const BookingTimeline = () => {
+
   const [groups, setGroups] = useState([]);
 
   const [tables, setTables] = useState([]);
@@ -35,6 +36,7 @@ const BookingTimeline = () => {
         return Promise.all(data);
       })
       .then((data) => {
+        console.log("state", data);
         setTables(data);
         let totalBookingsOfRestaurant = [];
         for (let i = 0; i < data.length; i++) {
@@ -98,6 +100,7 @@ const BookingTimeline = () => {
               return Promise.all(data);
             })
             .then((data) => {
+              console.log("subscription", data);
               setTables(data);
               let totalBookingsOfRestaurant = [];
               for (let i = 0; i < data.length; i++) {
@@ -115,9 +118,9 @@ const BookingTimeline = () => {
                   ),
                 };
               });
-              return [totalBookingsOfRestaurant, allTables];
+              return [totalBookingsOfRestaurant];
             })
-            .then(([bookings, allTables]) => {
+            .then(([bookings]) => {
               const bookingArr = bookings.map((booking) => {
                 return {
                   id: booking.booking_id,
@@ -130,7 +133,7 @@ const BookingTimeline = () => {
                 };
               });
               setBookings(bookings);
-              return Promise.all([bookingArr, setGroups(allTables)]);
+              return Promise.all([bookingArr]);
             })
             .then(([bookingArr]) => {
               return setTimelineEntries(bookingArr);
@@ -164,7 +167,8 @@ const BookingTimeline = () => {
   };
 
   const selectTableHandler = (e, tables) => {
-    const currentTable = tables.filter((table) => {
+    console.log(tables);
+    const currentTable = tables?.filter((table) => {
       return Number(table.table_id) === Number(e.target.value);
     })[0];
     let bookingStatus = 0;
@@ -207,7 +211,10 @@ const BookingTimeline = () => {
             selectedTable={selectedTable}
           />
         ) : typeSelected === 2 ? (
-          <SelectedTable selectedTable={selectedTable} />
+          <SelectedTable
+            selectedTable={selectedTable}
+            setSelectedTable={setSelectedTable}
+          />
         ) : null}
       </div>
       <BookingForm tables={tables} selectedTable={selectedTable} />
