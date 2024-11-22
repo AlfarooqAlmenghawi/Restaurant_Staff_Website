@@ -1,37 +1,42 @@
 import { TimeInput } from "@nextui-org/date-input";
 import { useEffect, useState } from "react";
 import supabase from "../../../../supabaseClient.js";
+import { useAuth } from "../../../hooks/Auth.jsx";
 
 function BookingForm({ tables, selectedTable }) {
   const [startTime, setStartTime] = useState("");
 
   const [endTime, setEndTime] = useState("");
 
-  const [reservationType, setReservationType] = useState(null);
+  const [reservationType, setReservationType] = useState(1);
 
   const [newBookingInfo, setNewBookingInfo] = useState({});
 
-  // useEffect(() => {
-  //   console.log(tables);
-  //   const defaultTable = { ...newBookingInfo };
-  //   defaultTable.table_id = tables[0].table_id;
-  //   setNewBookingInfo(defaultTable);
-  // }, [tables]);
+  const { user } = useAuth();
+
+  const [bookingTableSize, setBookingTableSize] = useState(0);
+
+  const [failed, setFailed] = useState(false);
+  const [failedMsg, setFailedMSg] = useState("");
+
+  useEffect(() => {
+    if (tables.length) {
+      const defaultTable = { ...newBookingInfo };
+      defaultTable.table_id = tables[0].table_id;
+      setNewBookingInfo(defaultTable);
+    }
+  }, [tables]);
 
   const changeValue = (e) => {
     const newInfo = { ...newBookingInfo };
     newInfo[e.target.id] = e.target.value;
     setNewBookingInfo(newInfo);
-    console.log(newInfo);
   };
 
   const changeReservationValue = (e) => {
-    console.log(e.target.value);
     if (e.target.value === "walkin") {
-      console.log(1);
       setReservationType(1);
     } else if (e.target.value === "phone") {
-      console.log(2);
       setReservationType(2);
     }
   };
@@ -45,31 +50,42 @@ function BookingForm({ tables, selectedTable }) {
   };
 
   const sendBooking = () => {
+    console.log(newBookingInfo);
+    let fullEndTime = null;
+    if (endTime !== "") {
+      fullEndTime = `2024-11-22 ${endTime.hour}:${endTime.minute}:00+00)`;
+    }
     if (
       startTime.hour > endTime.hour ||
       (startTime.hour === endTime.hour && startTime.minute > endTime.minute)
     ) {
-      console.log("Invalid time interval");
+      setFailed(true);
+      setFailedMSg("End time cannot be before start time!");
+    } else if (!newBookingInfo.party_size) {
+      setFailed(true);
+      setFailedMSg("Need a group size!");
+    } else if (newBookingInfo.party_size > bookingTableSize) {
+      console.log(bookingTableSize);
+      setFailed(true);
+      setFailedMSg("Group size is too big for the table!");
     } else {
       supabase
-        .from("bookings")
-        .insert([
-          {
-            user_id: "da7f48cd-072c-4d34-b3c2-6f3147d725fc",
-            table_id: newBookingInfo.table_id,
-            extra_info: newBookingInfo.extra_info,
-            party_size: newBookingInfo.party_size,
-            type: reservationType,
-            duration: `[2024-11-21 ${startTime.hour}:${startTime.minute}:00+00,2024-11-21 ${endTime.hour}:${endTime.minute}:00+00)`,
-          },
-        ])
-        .select()
-        .then(({ data }) => {})
-        .catch(({ data, error }) => {
-          console.log(error);
+        .rpc("create_booking", {
+          customer_id: user.id,
+          chosen_table_id: newBookingInfo.table_id,
+          customer_info: newBookingInfo.extra_info,
+          group_size: newBookingInfo.party_size,
+          booking_type: reservationType,
+          booking_time: `2024-11-22 ${startTime.hour}:${startTime.minute}:00+00`,
+          end_booking_time: fullEndTime,
+          chosen_restaurant_id: 1,
+        })
+        .then(({ data, error }) => {
+          console.error(error);
         });
     }
   };
+  // duration: `[2024-11-22 ${startTime.hour}:${startTime.minute}:00+00 , 2024-11-22 ${endTime.hour}:${endTime.minute}:00+00)`,
 
   const addTest = () => {
     supabase
@@ -87,9 +103,22 @@ function BookingForm({ tables, selectedTable }) {
       .select()
       .then(({ data }) => {})
       .catch(({ data, error }) => {
-        console.log(error);
+        console.error(error);
       });
   };
+
+  useEffect(() => {
+    let tableSize = 0;
+    if (newBookingInfo.table_id) {
+      tables.forEach((table) => {
+        if (Number(table.table_id) === Number(newBookingInfo.table_id)) {
+          tableSize = table.size;
+        }
+      });
+    }
+    console.log(tableSize);
+    setBookingTableSize(tableSize);
+  }, [newBookingInfo]);
 
   useEffect(() => {
     const changedBookingInfo = { ...newBookingInfo };
@@ -102,6 +131,7 @@ function BookingForm({ tables, selectedTable }) {
       {" "}
       <button onClick={addTest}>Add raw data</button>
       <p>New booking (restraunt side)</p>
+      {failed ? <p>{failedMsg}</p> : null}
       <form>
         <label>
           Start Time

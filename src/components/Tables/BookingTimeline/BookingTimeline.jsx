@@ -1,4 +1,8 @@
-import Timeline from "react-calendar-timeline";
+import Timeline, {
+  CursorMarker,
+  TimelineMarkers,
+  TodayMarker,
+} from "react-calendar-timeline";
 import "react-calendar-timeline/lib/Timeline.css";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -31,6 +35,7 @@ const BookingTimeline = () => {
         return Promise.all(data);
       })
       .then((data) => {
+        console.log(data);
         setTables(data);
         let totalBookingsOfRestaurant = [];
         for (let i = 0; i < data.length; i++) {
@@ -105,12 +110,7 @@ const BookingTimeline = () => {
                 return {
                   id: table.table_id,
                   title: (
-                    <button
-                      onClick={(e) => {
-                        selectTableHandler(e, data);
-                      }}
-                      value={table.table_id}
-                    >
+                    <button onClick={selectTableHandler} value={table.table_id}>
                       {table.table_name}
                     </button>
                   ),
@@ -164,12 +164,21 @@ const BookingTimeline = () => {
     setTypeSelected(1);
   };
 
-  const selectTableHandler = (e, groups) => {
-    const currentTable = groups.filter((table) => {
+  const selectTableHandler = (e) => {
+    console.log(tables);
+    const currentTable = tables.filter((table) => {
       return Number(table.table_id) === Number(e.target.value);
+    })[0];
+    let bookingStatus = 0;
+    currentTable.bookings.forEach(({ duration, booking_id }) => {
+      const start_time = moment(duration.slice(2, 24));
+      const end_time = moment(duration.slice(27, 49));
+      if (start_time.isBefore(moment()) && end_time.isAfter(moment())) {
+        bookingStatus = booking_id;
+      }
     });
-
-    setSelectedTable(currentTable[0]);
+    console.log({ ...currentTable, bookingStatus });
+    setSelectedTable({ ...currentTable, bookingStatus });
     setTypeSelected(2);
   };
 
@@ -186,7 +195,12 @@ const BookingTimeline = () => {
           onItemSelect={(itemId, e, time) => {
             selectBookingHandler(itemId, e, time, bookings, tables);
           }}
-        />
+        >
+          <TimelineMarkers>
+            <TodayMarker />
+            <CursorMarker />
+          </TimelineMarkers>
+        </Timeline>
       )}
       <div>
         {typeSelected === 1 ? (
