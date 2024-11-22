@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import supabase from "../../../supabaseClient";
+import { useAuth } from "../../hooks/Auth";
 
 function ProfileEdit() {
-  const HCRest = 3;
+  const { session } = useAuth();
+  console.log(session.restaurant_id);
+  const RestaurantID = session.restaurant_id;
 
   const [current, setCurrent] = useState({ restaurant_cuisines: [] });
 
@@ -19,13 +22,13 @@ function ProfileEdit() {
     supabase
       .from("restaurants")
       .update([sendData])
-      .eq("restaurant_id", HCRest)
+      .eq("restaurant_id", RestaurantID)
       .select()
       .then((data) => {});
     supabase
       .from("restaurant_cuisines")
       .delete()
-      .eq("restaurant_id", HCRest)
+      .eq("restaurant_id", RestaurantID)
       .select()
       .then(({ data, error }) => {})
       .then(() => {
@@ -73,7 +76,7 @@ function ProfileEdit() {
     });
     if (!isDupe) {
       newCurrent.restaurant_cuisines.push({
-        restaunt_id: HCRest,
+        restaunt_id: RestaurantID,
         cuisine_id: e.target.value,
       });
       setCurrent(newCurrent);
@@ -84,7 +87,7 @@ function ProfileEdit() {
     supabase
       .from("restaurants")
       .select("*, restaurant_cuisines(*)")
-      .eq("restaurant_id", HCRest)
+      .eq("restaurant_id", RestaurantID)
       .then(({ data, error }) => {
         setCurrent(data[0]);
         setOld(data[0]);

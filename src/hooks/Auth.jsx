@@ -33,20 +33,20 @@ export const AuthProvider = ({ children }) => {
       }
     );
 
-    const updateRestaurant = (restaurant_id) => {
-      setSession((currSession) => {
-        const updatedSession = { ...currSession };
-        updatedSession.restaurant_id = restaurant_id;
-        return updatedSession;
-      });
-    };
-
     setData();
 
     return () => {
       listener?.subscription.unsubscribe();
     };
   }, []);
+
+  const updateRestaurant = (restaurant_id) => {
+    setSession((currSession) => {
+      const updatedSession = { ...currSession };
+      updatedSession.restaurant_id = restaurant_id;
+      return updatedSession;
+    });
+  };
 
   const value = {
     session,
