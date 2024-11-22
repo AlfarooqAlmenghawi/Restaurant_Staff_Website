@@ -45,7 +45,6 @@ export const SignUp = () => {
 
 export const signUpAction = async ({ request }) => {
   const submittedData = await request.formData();
-  console.log("something");
   if (submittedData.get("password") !== submittedData.get("confirmPassword"))
     return { error: { code: "Passwords don't match" } };
   const submission = {

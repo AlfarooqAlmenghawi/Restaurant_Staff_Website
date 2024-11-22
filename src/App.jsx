@@ -25,7 +25,14 @@ const router = createBrowserRouter(
       <Route path="tables" element={<Tables />} />
       <Route path="sign-in" element={<SignIn />} action={signInAction} />
       <Route path="sign-up" element={<SignUp />} action={signUpAction} />
-      <Route path="profile" element={<ProfileEdit />} />
+      <Route
+        path="profile"
+        element={
+          <ProtectedRoute>
+            <ProfileEdit />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="my-restaurants"
         element={
