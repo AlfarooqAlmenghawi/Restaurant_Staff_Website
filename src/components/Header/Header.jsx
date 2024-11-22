@@ -15,8 +15,8 @@ function Header() {
         <NavLink className="nav-item" to="/tables">
           Tables
         </NavLink>
-        <NavLink className="heading-button" to="/profile">
-          Manage Profile
+        <NavLink className="nav-item" to="/restaurant-new">
+          Create New Restaurant
         </NavLink>
         <NavLink className="nav-item" to="/test2">
           Go Live
