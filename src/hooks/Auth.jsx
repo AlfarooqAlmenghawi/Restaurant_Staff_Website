@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import supabase from "../../supabaseClient";
 import { redirect } from "react-router-dom";
+import { useSessionStorage } from "./useStorage";
 
 const AuthContext = createContext({
   session: null,
@@ -12,6 +13,10 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [session, setSession] = useState();
   const [loading, setLoading] = useState(true);
+  const [selectedRestaurant, setSelectedRestaurant] = useSessionStorage(
+    "selectedRestaurant",
+    null
+  );
 
   useEffect(() => {
     const setData = async () => {
@@ -20,18 +25,28 @@ export const AuthProvider = ({ children }) => {
         error,
       } = await supabase.auth.getSession();
       if (error) throw error;
-      setSession(session);
+      session && setSession({ ...session, restaurant_id: selectedRestaurant });
       setUser(session?.user);
       setLoading(false);
     };
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
+        setSelectedRestaurant(null);
         setSession(session);
         setUser(session?.user);
         setLoading(false);
       }
     );
+
+    const updateRestaurant = (restaurant_id) => {
+      setSelectedRestaurant(restaurant_id);
+      setSession((currSession) => {
+        const updatedSession = { ...currSession };
+        updatedSession.restaurant_id = restaurant_id;
+        return updatedSession;
+      });
+    };
 
     setData();
 

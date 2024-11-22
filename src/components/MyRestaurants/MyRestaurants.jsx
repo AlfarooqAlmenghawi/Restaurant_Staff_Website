@@ -27,7 +27,7 @@ function MyRestaurants() {
     <>
       <h1>Your Restaurants:</h1>
       <div className="restaurants-of-staff">
-        {restaurantsOfStaff.map((restaurant) => {
+        {restaurantsOfStaff?.map((restaurant) => {
           console.log(restaurant.restaurants.restaurant_name);
           return (
             <>
