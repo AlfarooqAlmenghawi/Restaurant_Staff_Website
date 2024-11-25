@@ -2,11 +2,12 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import supabase from "../../../../supabaseClient.js";
 
-function SelectedBooking({ selectedBooking, selectedTable }) {
+function SelectedBooking({ selectedBooking, selectedTable, setTypeSelected }) {
   const [bookingExistence, setBookingExistence] = useState(true);
 
+  const [bookingType, setBookingType] = useState("");
+
   function deleteBooking() {
-    console.log(selectedBooking.booking_id);
     supabase
       .from("bookings")
       .delete()
@@ -17,6 +18,7 @@ function SelectedBooking({ selectedBooking, selectedTable }) {
         } else {
           setBookingExistence(false);
         }
+        setTypeSelected(0)
       })
       .catch((error) => {
         console.error("Delete Failed: ", error);
@@ -24,44 +26,32 @@ function SelectedBooking({ selectedBooking, selectedTable }) {
   }
 
   useEffect(() => {
-    setBookingExistence(true);
-    supabase
-      .from("bookings")
-      .select()
-      .eq("booking_id", selectedBooking.booking_id)
-      .then(({ data, error }) => {
-        if (data.length === 0) {
-          console.log(data);
-          console.log(selectedBooking.booking_id);
-          setBookingExistence(false);
-        } else {
-          console.log(data);
-          console.log(selectedBooking.booking_id);
-          setBookingExistence(true);
-        }
-      })
-      .catch((error) => {
-        console.error("Delete Failed: ", error);
-      });
+    if (selectedBooking.type === 0) {
+      setBookingType("Booked on App");
+    } else if (selectedBooking.type === 1) {
+      setBookingType("Walk-In");
+    } else {
+      setBookingType("Phone Booking");
+    }
   }, [selectedBooking]);
 
   return (
     <>
-      {bookingExistence ? (
-        <div id="selected-booking">
-          <p>Booking: Table - {selectedTable.table_name}</p>
-          <p>
-            Time: From{" "}
-            {moment(selectedBooking.duration.slice(2, 24)).calendar()} till{" "}
-            {moment(selectedBooking.duration.slice(27, 49)).calendar()}
-          </p>
-          <p>Guest Size: {selectedBooking.party_size}</p>
-          <p>Extra Information from Customer: "{selectedBooking.extra_info}"</p>
-          <button className="cancel-button" onClick={deleteBooking}>
-            Cancel Booking
-          </button>
-        </div>
-      ) : null}
+      <div id="selected-booking">
+        <p>Booking: Table - {selectedTable.table_name}</p>
+        <p>
+          Time: From {moment(selectedBooking.duration.slice(2, 24)).calendar()}{" "}
+          till {moment(selectedBooking.duration.slice(27, 49)).calendar()}
+        </p>
+        <p>Guest Size: {selectedBooking.party_size}</p>
+        {selectedBooking.extraInfo ? (
+          <p>Extra Information from Customer: {selectedBooking.extra_info}</p>
+        ) : null}
+        <p>{bookingType}</p>
+        <button className="cancel-button" onClick={deleteBooking}>
+          Cancel Booking
+        </button>
+      </div>
     </>
   );
 }
