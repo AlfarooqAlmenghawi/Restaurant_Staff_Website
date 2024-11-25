@@ -1,7 +1,10 @@
 import Timeline, {
   CursorMarker,
+  TimelineHeaders,
   TimelineMarkers,
   TodayMarker,
+  DateHeader,
+  SidebarHeader,
 } from "react-calendar-timeline";
 import "react-calendar-timeline/lib/Timeline.css";
 import moment from "moment";
@@ -77,6 +80,7 @@ const BookingTimeline = () => {
             end_time: moment(booking.duration.slice(27, 49)),
             canMove: false,
             canResize: false,
+            bgColor: "rgba(223, 41, 53, 1)",
           };
         });
         setBookings(bookings);
@@ -87,77 +91,78 @@ const BookingTimeline = () => {
       });
 
     console.log("Supabase client:", supabase);
-    
   }, [updater]);
 
-  useEffect(()=>{const commentsSubscription = supabase
-    .channel("bookings-channel")
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "bookings",
-      },
-      (payload) => {
-        console.log("Booking change received!", payload);
-        supabase
-          .from("tables")
-          .select("*, bookings(*)")
-          .eq("restaurant_id", "1")
-          .then(({ data }) => {
-            return Promise.all(data);
-          })
-          .then((data) => {
-            console.log("subscription", data);
-            setTables(data);
-            let totalBookingsOfRestaurant = [];
-            for (let i = 0; i < data.length; i++) {
-              totalBookingsOfRestaurant = totalBookingsOfRestaurant.concat(
-                data[i].bookings
-              );
-            }
-            const allTables = data.map((table) => {
-              return {
-                id: table.table_id,
-                title: (
-                  <button onClick={selectTableHandler} value={table.table_id}>
-                    {table.table_name}
-                  </button>
-                ),
-              };
+  useEffect(() => {
+    const commentsSubscription = supabase
+      .channel("bookings-channel")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "bookings",
+        },
+        (payload) => {
+          console.log("Booking change received!", payload);
+          supabase
+            .from("tables")
+            .select("*, bookings(*)")
+            .eq("restaurant_id", restaurant_id)
+            .then(({ data }) => {
+              return Promise.all(data);
+            })
+            .then((data) => {
+              console.log("subscription", data);
+              setTables(data);
+              let totalBookingsOfRestaurant = [];
+              for (let i = 0; i < data.length; i++) {
+                totalBookingsOfRestaurant = totalBookingsOfRestaurant.concat(
+                  data[i].bookings
+                );
+              }
+              const allTables = data.map((table) => {
+                return {
+                  id: table.table_id,
+                  title: (
+                    <button onClick={selectTableHandler} value={table.table_id}>
+                      {table.table_name}
+                    </button>
+                  ),
+                };
+              });
+              return [totalBookingsOfRestaurant, allTables];
+            })
+            .then(([bookings]) => {
+              const bookingArr = bookings.map((booking) => {
+                return {
+                  id: booking.booking_id,
+                  group: booking.table_id,
+                  title: "booking",
+                  start_time: moment(booking.duration.slice(2, 24)),
+                  end_time: moment(booking.duration.slice(27, 49)),
+                  canMove: false,
+                  canResize: false,
+                  bgColor: "rgba(223, 41, 53, 1)",
+                };
+              });
+              setBookings(bookings);
+              return Promise.all([bookingArr]);
+            })
+            .then(([bookingArr]) => {
+              return setTimelineEntries(bookingArr);
             });
-            return [totalBookingsOfRestaurant, allTables];
-          })
-          .then(([bookings]) => {
-            const bookingArr = bookings.map((booking) => {
-              return {
-                id: booking.booking_id,
-                group: booking.table_id,
-                title: "booking",
-                start_time: moment(booking.duration.slice(2, 24)),
-                end_time: moment(booking.duration.slice(27, 49)),
-                canMove: false,
-                canResize: false,
-              };
-            });
-            setBookings(bookings);
-            return Promise.all([bookingArr]);
-          })
-          .then(([bookingArr]) => {
-            return setTimelineEntries(bookingArr);
-          });
-      }
-    )
-    .subscribe((status) => {
-      console.log("Subscription status:", status);
-    });
-    console.log("update")
-  // Clean up subscription when the component unmounts
-  return () => {
-    supabase.removeChannel(commentsSubscription);
-  };
-  })
+        }
+      )
+      .subscribe((status) => {
+        console.log("Subscription status:", status);
+      });
+    console.log("update");
+    // Clean up subscription when the component unmounts
+    return () => {
+      supabase.removeChannel(commentsSubscription);
+    };
+  });
 
   //type selected value refers to the type of selected item. 0=nothing(default), 1=booking item, 2=table
 
@@ -195,25 +200,31 @@ const BookingTimeline = () => {
 
   return (
     <div>
-      {groups.length && timelineEntries.length && (
-        <Timeline
-          groups={groups}
-          items={timelineEntries}
-          defaultTimeStart={moment().add(-12, "hour")}
-          defaultTimeEnd={moment().add(12, "hour")}
-          minZoom={60 * 60 * 1000}
-          maxZoom={365.24 * 86400 * 1000}
-          onItemSelect={(itemId, e, time) => {
-            selectBookingHandler(itemId, e, time, bookings, tables);
-          }}
-        >
-          <TimelineMarkers>
-            <TodayMarker />
-            <CursorMarker />
-          </TimelineMarkers>
-        </Timeline>
-      )}
-      <div>
+      <div className="mr-6 ml-6" >
+        {groups.length && timelineEntries.length && (
+          <Timeline
+          className="border-primary border-2"
+            groups={groups}
+            items={timelineEntries}
+            defaultTimeStart={moment().add(-12, "hour")}
+            defaultTimeEnd={moment().add(12, "hour")}
+            minZoom={60 * 60 * 1000}
+            maxZoom={365.24 * 86400 * 1000}
+            onItemSelect={(itemId, e, time) => {
+              selectBookingHandler(itemId, e, time, bookings, tables);
+            }}
+          >
+            <TimelineHeaders>
+              <SidebarHeader></SidebarHeader>
+              <DateHeader unit="primaryHeader" />
+              <DateHeader />
+            </TimelineHeaders>
+            <TimelineMarkers>
+              <TodayMarker />
+              <CursorMarker />
+            </TimelineMarkers>
+          </Timeline>
+        )}
         {typeSelected === 1 ? (
           <SelectedBooking
             selectedBooking={selectedBooking}
