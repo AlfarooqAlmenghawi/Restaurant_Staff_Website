@@ -21,7 +21,7 @@ function BookingForm({ tables, selectedTable }) {
 
   const [failedMsg, setFailedMSg] = useState("");
 
-  const [bookingDate, setBookingDate] = useState(moment().format("YYYY-MM-DD"))
+  const [bookingDate, setBookingDate] = useState(moment().format("YYYY-MM-DD"));
 
   useEffect(() => {
     if (tables.length) {
@@ -53,14 +53,14 @@ function BookingForm({ tables, selectedTable }) {
     setEndTime(value);
   };
 
-  const changeDate = (value) => {
-
-  }
+  const changeDateHandler = (e) => {
+    setBookingDate(e.target.value);
+  };
 
   const sendBooking = () => {
     let fullEndTime = null;
     if (endTime !== "") {
-      fullEndTime = `2024-11-22 ${endTime.hour}:${endTime.minute}:00+00)`;
+      fullEndTime = `${bookingDate} ${endTime.hour}:${endTime.minute}:00+00)`;
     }
     if (
       startTime.hour > endTime.hour ||
@@ -82,7 +82,7 @@ function BookingForm({ tables, selectedTable }) {
           customer_info: newBookingInfo.extra_info,
           group_size: newBookingInfo.party_size,
           booking_type: reservationType,
-          booking_time: `2024-11-22 ${startTime.hour}:${startTime.minute}:00+00`,
+          booking_time: `${bookingDate} ${startTime.hour}:${startTime.minute}:00+00`,
           end_booking_time: fullEndTime,
           chosen_restaurant_id: 1,
         })
@@ -150,7 +150,11 @@ function BookingForm({ tables, selectedTable }) {
         <br></br>
         <label>
           Date:
-          <input type="date" onChange={(e)=>{console.log(e.target.value)}}min={moment().format("YYYY-MM-DD")} />
+          <input
+            type="date"
+            onChange={changeDateHandler}
+            min={moment().format("YYYY-MM-DD")}
+          />
         </label>
         <label>
           Table
