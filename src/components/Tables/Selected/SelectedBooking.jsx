@@ -18,7 +18,7 @@ function SelectedBooking({ selectedBooking, selectedTable, setTypeSelected }) {
         } else {
           setBookingExistence(false);
         }
-        setTypeSelected(0)
+        setTypeSelected(0);
       })
       .catch((error) => {
         console.error("Delete Failed: ", error);
@@ -44,10 +44,10 @@ function SelectedBooking({ selectedBooking, selectedTable, setTypeSelected }) {
           till {moment(selectedBooking.duration.slice(27, 49)).calendar()}
         </p>
         <p>Guest Size: {selectedBooking.party_size}</p>
-        {selectedBooking.extraInfo ? (
+        <p>Booking Type: {bookingType}</p>
+        {selectedBooking.extra_info ? (
           <p>Extra Information from Customer: {selectedBooking.extra_info}</p>
         ) : null}
-        <p>{bookingType}</p>
         <button className="cancel-button" onClick={deleteBooking}>
           Cancel Booking
         </button>

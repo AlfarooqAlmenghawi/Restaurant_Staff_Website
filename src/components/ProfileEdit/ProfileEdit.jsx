@@ -46,7 +46,7 @@ function ProfileEdit() {
     const newCurrent = { ...current };
     newCurrent.restaurant_cuisines = newCurrent.restaurant_cuisines.filter(
       (cuisine) => {
-        return cuisine.cuisine_id !== e.target.id;
+        return cuisine.cuisine_id != e.target.id;
       }
     );
     setCurrent(newCurrent);
