@@ -3,8 +3,11 @@ import { useAuth } from "../../../hooks/Auth";
 import supabase from "../../../../supabaseClient";
 
 function SelectedTable({ selectedTable, setSelectedTable, setUpdater }) {
-  const { user } = useAuth();
-  
+  const {
+    user,
+    session: { restaurant_id },
+  } = useAuth();
+
   const freeTableHandler = () => {
     supabase
       .rpc("update_end_time", {
@@ -25,7 +28,7 @@ function SelectedTable({ selectedTable, setSelectedTable, setUpdater }) {
         group_size: 2,
         booking_type: 1,
         booking_time: moment().format("YYYY-MM-DD HH:mm:ss+00"),
-        chosen_restaurant_id: 1,
+        chosen_restaurant_id: restaurant_id,
       })
       .then(({ data, error }) => {
         setUpdater(selectedTable.bookingStatus);

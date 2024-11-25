@@ -96,26 +96,6 @@ function BookingForm({ tables, selectedTable }) {
   };
   // duration: `[2024-11-22 ${startTime.hour}:${startTime.minute}:00+00 , 2024-11-22 ${endTime.hour}:${endTime.minute}:00+00)`,
 
-  const addTest = () => {
-    supabase
-      .from("bookings")
-      .insert([
-        {
-          user_id: "da7f48cd-072c-4d34-b3c2-6f3147d725fc",
-          table_id: 2,
-          extra_info: "The frick this idiot swore at me on the phone",
-          party_size: 5,
-          type: 2,
-          duration: `[2024-11-20 20:15:00+00,2024-11-20 23:25:00+00)`,
-        },
-      ])
-      .select()
-      .then(({ data }) => {})
-      .catch(({ data, error }) => {
-        console.error(error);
-      });
-  };
-
   useEffect(() => {
     let tableSize = 0;
     if (newBookingInfo.table_id) {
@@ -137,8 +117,7 @@ function BookingForm({ tables, selectedTable }) {
   return (
     <>
       {" "}
-      <button onClick={addTest}>Add raw data</button>
-      <p>New booking (restraunt side)</p>
+      <p>New Booking</p>
       {failed ? <p>{failedMsg}</p> : null}
       <form>
         <label>
