@@ -240,7 +240,7 @@ function ProfileEdit() {
           />
         </label>
       </div>
-      <button onClick={sendProfile}>update</button>
+      <button onClick={sendProfile}>Update Restaurant</button>
     </main>
   );
 }
