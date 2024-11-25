@@ -37,18 +37,19 @@ function SelectedBooking({ selectedBooking, selectedTable, setTypeSelected }) {
 
   return (
     <>
-      <div id="selected-booking">
-        <p>Booking: Table - {selectedTable.table_name}</p>
+      <div id="selected-booking" className="@apply selectBox">
+        <p><b>Booking:</b> Table - {selectedTable.table_name}</p>
         <p>
-          Time: From {moment(selectedBooking.duration.slice(2, 24)).calendar()}{" "}
-          till {moment(selectedBooking.duration.slice(27, 49)).calendar()}
+          <b>Time:</b> {moment(selectedBooking.duration.slice(2, 24)).calendar()}{" "}
+          until {moment(selectedBooking.duration.slice(27, 49)).format("LT")}
         </p>
-        <p>Guest Size: {selectedBooking.party_size}</p>
-        <p>Booking Type: {bookingType}</p>
-        {selectedBooking.extra_info ? (
+
+        <p><b>Guest Size:</b> {selectedBooking.party_size}</p>
+        {selectedBooking.extraInfo ? (
           <p>Extra Information from Customer: {selectedBooking.extra_info}</p>
         ) : null}
-        <button className="cancel-button" onClick={deleteBooking}>
+        <p>{bookingType}</p>
+        <button className="@apply custButton" onClick={deleteBooking}>
           Cancel Booking
         </button>
       </div>

@@ -60,7 +60,8 @@ function BookingForm({ tables, selectedTable }) {
     setBookingDate(e.target.value);
   };
 
-  const sendBooking = () => {
+  const sendBooking = (e) => {
+    e.preventDefault();
     let fullEndTime = null;
     if (endTime !== "") {
       fullEndTime = `${bookingDate} ${endTime.hour}:${endTime.minute}:00+00)`;
@@ -116,73 +117,96 @@ function BookingForm({ tables, selectedTable }) {
 
   return (
     <>
-      {" "}
-      <p>New Booking</p>
-      {failed ? <p>{failedMsg}</p> : null}
-      <form>
-        <label>
-          Start Time
-          <TimeInput onChange={changeStartTime} />
-        </label>
-        <br></br>
-        <label>
-          End Time
-          <TimeInput onChange={changeEndTime} />
-        </label>
-        <br></br>
-        <label>
-          Date:
-          <input
-            type="date"
-            onChange={changeDateHandler}
-            min={moment().format("YYYY-MM-DD")}
-          />
-        </label>
-        <label>
-          Table
-          <select
-            value={newBookingInfo.table_id}
-            id="table_id"
-            onChange={changeValue}
-          >
-            {tables.map((table) => {
-              return (
-                <option
-                  value={table.table_id}
-                  id={table.table_id}
-                  className="individual_table"
-                >
-                  {table.table_name}
-                </option>
-              );
-            })}
-          </select>
-        </label>
-        <label>
-          Reservation Type
-          <select id="reservation" onChange={changeReservationValue}>
-            <option>Select Here</option>
-            <option value="walkin" className="reservation-type">
-              Walk-In Reservation
-            </option>
-            <option value="phone" className="reservation-type">
-              Phone Call Reservation
-            </option>
-          </select>
-        </label>
-        <br></br>
-        <label>
-          Party size
-          <input id="party_size" onChange={changeValue}></input>
-        </label>
-        <br></br>
-        <label>
-          Message
-          <input id="extra_info" onChange={changeValue}></input>
-        </label>
-        <br></br>
-      </form>
-      <button onClick={sendBooking}>Submit Booking</button>
+      <div className="border-spacing-4 border-2 border-primary m-6 p-4 ">
+        <h3 className="font-bold text-lg">New Booking</h3>
+        <form className="grid grid-cols-3 gap-2">
+          <label className="flex flex-col font-bold">
+            Start Time *
+            <TimeInput
+              hourCycle={24}
+              className="flex"
+              onChange={changeStartTime}
+            />
+          </label>
+          <label className="flex flex-col font-bold">
+            End Time
+            <TimeInput
+              className="font-normal"
+              hourCycle={24}
+              onChange={changeEndTime}
+            />
+          </label>
+          <label className="flex flex-col font-bold">
+            <b>Date:</b>
+            <input
+              type="date"
+              onChange={changeDateHandler}
+              min={moment().format("YYYY-MM-DD")}
+            />
+          </label>
+          <label className="flex flex-col font-semibold">
+            Table *
+            <select
+              className="font-normal"
+              value={newBookingInfo.table_id}
+              id="table_id"
+              onChange={changeValue}
+            >
+              {tables.map((table) => {
+                return (
+                  <option
+                    value={table.table_id}
+                    id={table.table_id}
+                    className="individual_table"
+                  >
+                    {table.table_name}
+                  </option>
+                );
+              })}
+            </select>
+          </label>
+          <label className="flex flex-col font-semibold">
+            Reservation Type
+            <select
+              id="reservation"
+              onChange={changeReservationValue}
+              className="font-normal"
+            >
+              <option value="phone" className="font-normal">
+                Phone
+              </option>
+              <option value="walkin" className="font-normal">
+                Walk-In
+              </option>
+            </select>
+          </label>
+          <br></br>
+          <label className="flex flex-col font-semibold">
+            Party size *
+            <input
+              value={newBookingInfo.party_size}
+              type="number"
+              className="border-[1px]"
+              id="party_size"
+              onChange={changeValue}
+            ></input>
+          </label>
+          <label className="flex flex-col font-semibold col-span-2">
+            Message
+            <textarea
+              className="border-[1px] font-normal"
+              id="extra_info"
+              onChange={changeValue}
+            ></textarea>
+          </label>
+          <button className="@apply custButton" onClick={sendBooking}>
+            Submit Booking
+          </button>
+          {failed ? (
+            <p className="text-red-600 font-bold">{failedMsg}</p>
+          ) : null}
+        </form>
+      </div>
     </>
   );
 }
