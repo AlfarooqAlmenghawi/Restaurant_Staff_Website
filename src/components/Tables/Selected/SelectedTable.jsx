@@ -38,16 +38,20 @@ function SelectedTable({ selectedTable, setSelectedTable, setUpdater }) {
 
   return (
     <div className="@apply selectBox">
-      <p>Table: {selectedTable.table_name}</p>
-      <p>This table is a table for {selectedTable.size} people.</p>
-      {selectedTable.bookingStatus ? (
-        <button className="bg-green-600 p-2 hover:bg-green-500" onClick={freeTableHandler}>
-          Table Free
-        </button>
+      <p className="font-bold">{selectedTable.table_name}</p>
+      <p>Seats {selectedTable.size}</p>
+      {selectedTable.bookingStatus ? (<>
+      <p className="text-red-600 font-bold">Currently Occupied</p>
+        <button className="bg-red-600 p-2 hover:bg-green-600" onClick={freeTableHandler}>
+          Toggle Availability
+        </button></>
       ) : (
-        <button className="bg-red-600 p-2" onClick={occupyTableHandler}>
-          Table Occupied
+        <>
+        <p className="text-green-600 font-bold">Currently Free</p>
+        <button className="bg-green-600 p-2 hover:bg-red-600" onClick={occupyTableHandler}>
+          Toggle Availability
         </button>
+        </>
       )}
     </div>
   );
