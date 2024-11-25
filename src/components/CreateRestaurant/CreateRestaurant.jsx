@@ -53,11 +53,17 @@ function CreateRestaurant() {
 
   const removeCuisine = (e) => {
     const newCurrent = { ...current };
+    console.log("Before:", newCurrent);
+    console.log(e.target.id);
+
     newCurrent.restaurant_cuisines = newCurrent.restaurant_cuisines.filter(
       (cuisine) => {
-        return cuisine.cuisine_id !== Number(e.target.id);
+        console.log(typeof cuisine.cuisine_id);
+        console.log(typeof e.target.id);
+        return cuisine.cuisine_id !== e.target.id;
       }
     );
+    console.log("After:", newCurrent);
     setCurrent(newCurrent);
   };
 

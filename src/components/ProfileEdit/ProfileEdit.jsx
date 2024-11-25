@@ -24,7 +24,9 @@ function ProfileEdit() {
       .update([sendData])
       .eq("restaurant_id", RestaurantID)
       .select()
-      .then((data) => {});
+      .then((data) => {
+        console.log(data);
+      });
     supabase
       .from("restaurant_cuisines")
       .delete()
@@ -44,7 +46,7 @@ function ProfileEdit() {
     const newCurrent = { ...current };
     newCurrent.restaurant_cuisines = newCurrent.restaurant_cuisines.filter(
       (cuisine) => {
-        return cuisine.cuisine_id !== Number(e.target.id);
+        return cuisine.cuisine_id !== e.target.id;
       }
     );
     setCurrent(newCurrent);
@@ -76,7 +78,7 @@ function ProfileEdit() {
     });
     if (!isDupe) {
       newCurrent.restaurant_cuisines.push({
-        restaunt_id: RestaurantID,
+        restaurant_id: RestaurantID,
         cuisine_id: e.target.value,
       });
       setCurrent(newCurrent);
