@@ -2,6 +2,7 @@ import { TimeInput } from "@nextui-org/date-input";
 import { useEffect, useState } from "react";
 import supabase from "../../../../supabaseClient.js";
 import { useAuth } from "../../../hooks/Auth.jsx";
+import moment from "moment";
 
 function BookingForm({ tables, selectedTable }) {
   const [startTime, setStartTime] = useState("");
@@ -17,7 +18,10 @@ function BookingForm({ tables, selectedTable }) {
   const [bookingTableSize, setBookingTableSize] = useState(0);
 
   const [failed, setFailed] = useState(false);
+
   const [failedMsg, setFailedMSg] = useState("");
+
+  const [bookingDate, setBookingDate] = useState(moment().format("YYYY-MM-DD"))
 
   useEffect(() => {
     if (tables.length) {
@@ -48,6 +52,10 @@ function BookingForm({ tables, selectedTable }) {
   const changeEndTime = (value) => {
     setEndTime(value);
   };
+
+  const changeDate = (value) => {
+
+  }
 
   const sendBooking = () => {
     let fullEndTime = null;
@@ -140,6 +148,10 @@ function BookingForm({ tables, selectedTable }) {
           <TimeInput onChange={changeEndTime} />
         </label>
         <br></br>
+        <label>
+          Date:
+          <input type="date" onChange={(e)=>{console.log(e.target.value)}}min={moment().format("YYYY-MM-DD")} />
+        </label>
         <label>
           Table
           <select
