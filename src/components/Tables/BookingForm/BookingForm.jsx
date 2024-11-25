@@ -13,7 +13,10 @@ function BookingForm({ tables, selectedTable }) {
 
   const [newBookingInfo, setNewBookingInfo] = useState({});
 
-  const { user } = useAuth();
+  const {
+    user,
+    session: { restaurant_id },
+  } = useAuth();
 
   const [bookingTableSize, setBookingTableSize] = useState(0);
 
@@ -84,7 +87,7 @@ function BookingForm({ tables, selectedTable }) {
           booking_type: reservationType,
           booking_time: `${bookingDate} ${startTime.hour}:${startTime.minute}:00+00`,
           end_booking_time: fullEndTime,
-          chosen_restaurant_id: 1,
+          chosen_restaurant_id: restaurant_id,
         })
         .then(({ data, error }) => {
           console.error(error);

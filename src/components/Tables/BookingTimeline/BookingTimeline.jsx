@@ -10,6 +10,7 @@ import SelectedBooking from "../Selected/SelectedBooking";
 import SelectedTable from "../Selected/SelectedTable";
 import BookingForm from "../BookingForm/BookingForm.jsx";
 import supabase from "../../../../supabaseClient.js";
+import { useAuth } from "../../../hooks/Auth.jsx";
 
 const BookingTimeline = () => {
   const [groups, setGroups] = useState([]);
@@ -28,11 +29,15 @@ const BookingTimeline = () => {
 
   const [updater, setUpdater] = useState(0);
 
+  const {
+    session: { restaurant_id },
+  } = useAuth();
+
   useEffect(() => {
     supabase
       .from("tables")
       .select("*, bookings(*)")
-      .eq("restaurant_id", "1")
+      .eq("restaurant_id", restaurant_id)
       .then(({ data }) => {
         return Promise.all(data);
       })
