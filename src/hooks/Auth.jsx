@@ -18,6 +18,15 @@ export const AuthProvider = ({ children }) => {
     null
   );
 
+  const updateRestaurant = (restaurant_id) => {
+    setSelectedRestaurant(restaurant_id);
+    setSession((currSession) => {
+      const updatedSession = { ...currSession };
+      updatedSession.restaurant_id = restaurant_id;
+      return updatedSession;
+    });
+  };
+
   useEffect(() => {
     const setData = async () => {
       const {
@@ -31,22 +40,13 @@ export const AuthProvider = ({ children }) => {
     };
 
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSelectedRestaurant(null);
-        setSession(session);
+      (event, session) => {
+        session &&
+          setSession({ ...session, restaurant_id: selectedRestaurant });
         setUser(session?.user);
         setLoading(false);
       }
     );
-
-    const updateRestaurant = (restaurant_id) => {
-      setSelectedRestaurant(restaurant_id);
-      setSession((currSession) => {
-        const updatedSession = { ...currSession };
-        updatedSession.restaurant_id = restaurant_id;
-        return updatedSession;
-      });
-    };
 
     setData();
 
@@ -54,14 +54,6 @@ export const AuthProvider = ({ children }) => {
       listener?.subscription.unsubscribe();
     };
   }, []);
-
-  const updateRestaurant = (restaurant_id) => {
-    setSession((currSession) => {
-      const updatedSession = { ...currSession };
-      updatedSession.restaurant_id = restaurant_id;
-      return updatedSession;
-    });
-  };
 
   const value = {
     session,

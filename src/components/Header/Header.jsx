@@ -23,7 +23,7 @@ function Header() {
         </NavLink>
         {session ? (
           <>
-            <p>Welcome, {user.email}!</p>
+            <p>Welcome, {user?.email}!</p>
             <button onClick={signOut} className="nav-item">
               Sign Out
             </button>
