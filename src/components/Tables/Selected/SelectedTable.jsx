@@ -41,7 +41,7 @@ function SelectedTable({ selectedTable, setSelectedTable, setUpdater }) {
       <p>Table: {selectedTable.table_name}</p>
       <p>This table is a table for {selectedTable.size} people.</p>
       {selectedTable.bookingStatus ? (
-        <button className="bg-green-600 p-2" onClick={freeTableHandler}>
+        <button className="bg-green-600 p-2 hover:bg-green-500" onClick={freeTableHandler}>
           Table Free
         </button>
       ) : (

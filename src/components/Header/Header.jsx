@@ -9,27 +9,27 @@ function Header() {
       <nav className="nav-bar">
         <h2 className="nav-item">Place holder company name</h2>
 
-        <NavLink className="nav-item" to="/my-restaurants">
+        <NavLink className="@apply custButton" to="/my-restaurants">
           My Restaurants
         </NavLink>
-        <NavLink className="nav-item" to="/tables">
+        <NavLink className="@apply custButton" to="/tables">
           Tables
         </NavLink>
-        <NavLink className="nav-item" to="/restaurant-new">
+        <NavLink className="@apply custButton" to="/restaurant-new">
           Create New Restaurant
         </NavLink>
-        <NavLink className="nav-item" to="/go-live">
+        <NavLink className="@apply custButton" to="/go-live">
           Go Live
         </NavLink>
         {session ? (
           <>
             <p>Welcome, {user?.email}!</p>
-            <button onClick={signOut} className="nav-item">
+            <button onClick={signOut} className="@apply custButton">
               Sign Out
             </button>
           </>
         ) : (
-          <NavLink to="/sign-in" className="nav-item">
+          <NavLink to="/sign-in" className="@apply custButton">
             Sign In
           </NavLink>
         )}
