@@ -43,6 +43,7 @@ function SelectedBooking({ selectedBooking, selectedTable, setTypeSelected }) {
           <b>Time:</b> {moment(selectedBooking.duration.slice(2, 24)).calendar()}{" "}
           until {moment(selectedBooking.duration.slice(27, 49)).format("LT")}
         </p>
+
         <p><b>Guest Size:</b> {selectedBooking.party_size}</p>
         {selectedBooking.extraInfo ? (
           <p>Extra Information from Customer: {selectedBooking.extra_info}</p>

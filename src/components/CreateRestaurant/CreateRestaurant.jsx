@@ -5,11 +5,16 @@ import { useAuth } from "../../hooks/Auth";
 function CreateRestaurant() {
   const { session } = useAuth();
   // const RestaurantID = session.restaurant_id;
-  console.log(session.user.id);
 
   const [current, setCurrent] = useState({ restaurant_cuisines: [] });
 
   const [cuisines, setCuisines] = useState([]);
+
+  const [typedLocation, setTypedLocation] = useState("");
+
+  const [locationsResult, setLocationsResult] = useState({});
+
+  const [selectedLocation, setSelectedLocation] = useState(null);
 
   const [old, setOld] = useState({ restaurant_cuisines: [] });
 
@@ -20,8 +25,8 @@ function CreateRestaurant() {
       delete sendData.restaurant_cuisines;
     }
     console.log(sendData);
-    const latitude = "53.51109276677123";
-    const longitude = "-2.244281984926215";
+    const latitude = selectedLocation.latitude;
+    const longitude = selectedLocation.longitude;
 
     sendData.location = `point(${longitude} ${latitude})`;
     supabase
@@ -60,7 +65,7 @@ function CreateRestaurant() {
       (cuisine) => {
         console.log(typeof cuisine.cuisine_id);
         console.log(typeof e.target.id);
-        return cuisine.cuisine_id !== e.target.id;
+        return cuisine.cuisine_id != e.target.id;
       }
     );
     console.log("After:", newCurrent);
@@ -75,6 +80,62 @@ function CreateRestaurant() {
       newCurrent[e.target.id] = old[e.target.id];
     }
     setCurrent(newCurrent);
+  };
+
+  const setCurrentLocation = (e) => {
+    console.log(typedLocation);
+    console.log(e.target.value);
+    setTypedLocation(e.target.value);
+  };
+
+  const fetchLocation = () => {
+    fetch(
+      `https://api.geoapify.com/v1/geocode/search?text=${typedLocation}&apiKey=e9eabc644c4544ce98dfe36c8c70232f`
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("API Response:", data); // Check the structure of the response
+
+        // if (data) {
+        //   // const place = location.properties.formatted;
+        //   // const lat = location.properties.lat;
+        //   // const lon = location.properties.lon;
+        //   // console.log(`Latitude: ${lat}, Longitude: ${lon}`);
+
+        //
+        //   console.log(data);
+        // } else {
+        //   console.error("Location not found!");
+        // }
+        if (data && data.features && data.features.length > 0) {
+          setLocationsResult(data); // Update state with valid data
+        } else {
+          console.error("No locations found or invalid response structure");
+          setLocationsResult({ features: [] }); // Ensure consistent structure
+        }
+        return data;
+      })
+      .then((data) => {
+        setLocationsResult(data);
+      })
+      .then(() => {
+        console.log(locationsResult);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const chooseLocation = (e) => {
+    console.log(e.target.value);
+    setSelectedLocation({
+      address: e.target.dataset.address,
+      coordinates: e.target.value,
+      latitude: e.target.dataset.latitude,
+      longitude: e.target.dataset.longitude,
+    });
   };
 
   const changeCheckbox = (e) => {
@@ -108,6 +169,10 @@ function CreateRestaurant() {
       });
   }, []);
 
+  useEffect(() => {
+    console.log("Updated locationsResult:", locationsResult);
+  }, [locationsResult]);
+
   return (
     <main>
       <h3>{current.restaurant_name}</h3>
@@ -140,8 +205,57 @@ function CreateRestaurant() {
             placeholder={current.description}
             value={current.description}
             onChange={changeCurr}
-          ></textarea>
+          />
         </label>
+        <br></br>
+        <label>
+          Location
+          <input
+            id="location"
+            placeholder={current.location}
+            onChange={setCurrentLocation}
+          ></input>
+          <button className="search-location" onClick={fetchLocation}>
+            Search
+          </button>
+          {selectedLocation && (
+            <>
+              <h2>Here is the currently selected location:</h2>
+              <p>{selectedLocation.address}</p>
+              <p>Coordinates: {selectedLocation.coordinates}</p>
+            </>
+          )}
+        </label>
+        <br></br>
+        <>
+          {locationsResult.features && locationsResult.features.length > 0 ? (
+            <>
+              {locationsResult.features.length === 1 ? (
+                <h2>We found {locationsResult.features.length} location!</h2>
+              ) : (
+                <h2>We found {locationsResult.features.length} locations!</h2>
+              )}
+
+              {locationsResult.features.map((location, index) => (
+                <div key={index}>
+                  <p>{location.properties.formatted}</p>
+                  <p>Latitude: {location.properties.lat}</p>
+                  <p>Longitude: {location.properties.lon}</p>
+                  <button
+                    className="location-select"
+                    data-address={location.properties.formatted}
+                    data-latitude={location.properties.lat}
+                    data-longitude={location.properties.lon}
+                    value={`${location.properties.lat}, ${location.properties.lon}`}
+                    onClick={chooseLocation}
+                  >
+                    Select this location
+                  </button>
+                </div>
+              ))}
+            </>
+          ) : null}
+        </>
       </div>
       <div>
         <h4>Food</h4>
@@ -154,7 +268,10 @@ function CreateRestaurant() {
                 <select onChange={addCuisine}>
                   {cuisines.map((cuisine) => {
                     return (
-                      <option value={cuisine.cuisine_id}>
+                      <option
+                        key={cuisine.cuisine_id}
+                        value={cuisine.cuisine_id}
+                      >
                         {
                           cuisines.filter((entry) => {
                             return entry.cuisine_id === cuisine.cuisine_id;

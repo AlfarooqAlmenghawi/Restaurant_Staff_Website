@@ -93,6 +93,7 @@ const BookingTimeline = () => {
     console.log("Supabase client:", supabase);
   }, [updater]);
 
+
   useEffect(() => {
     const commentsSubscription = supabase
       .channel("bookings-channel")
