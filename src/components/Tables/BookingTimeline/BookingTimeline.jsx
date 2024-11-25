@@ -104,7 +104,7 @@ const BookingTimeline = () => {
         supabase
           .from("tables")
           .select("*, bookings(*)")
-          .eq("restaurant_id", "1")
+          .eq("restaurant_id",restaurant_id)
           .then(({ data }) => {
             return Promise.all(data);
           })
