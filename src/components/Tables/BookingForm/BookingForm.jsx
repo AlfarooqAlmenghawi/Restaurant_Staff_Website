@@ -60,7 +60,8 @@ function BookingForm({ tables, selectedTable }) {
     setBookingDate(e.target.value);
   };
 
-  const sendBooking = () => {
+  const sendBooking = (e) => {
+    e.preventDefault();
     let fullEndTime = null;
     if (endTime !== "") {
       fullEndTime = `${bookingDate} ${endTime.hour}:${endTime.minute}:00+00)`;
