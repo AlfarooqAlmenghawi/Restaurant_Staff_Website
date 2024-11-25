@@ -4,8 +4,7 @@ import { useAuth } from "../../hooks/Auth";
 
 function ProfileEdit() {
   const { session } = useAuth();
-  console.log(session.restaurant_id);
-  const RestaurantID = session.restaurant_id;
+  const RestaurantID = Number(session.restaurant_id);
 
   const [current, setCurrent] = useState({ restaurant_cuisines: [] });
 
@@ -15,7 +14,14 @@ function ProfileEdit() {
 
   const sendProfile = () => {
     const sendData = { ...current };
-    const newCuisines = [...current.restaurant_cuisines];
+    const oldCuisines = new Set(
+      old.restaurant_cuisines.map(({ cuisine_id }) => +cuisine_id)
+    );
+    const currentCuisines = new Set(
+      current.restaurant_cuisines.map(({ cuisine_id }) => +cuisine_id)
+    );
+    const toInsert = currentCuisines.difference(oldCuisines);
+    const toDelete = oldCuisines.difference(currentCuisines);
     if (sendData.restaurant_cuisines.length) {
       delete sendData.restaurant_cuisines;
     }
@@ -24,22 +30,30 @@ function ProfileEdit() {
       .update([sendData])
       .eq("restaurant_id", RestaurantID)
       .select()
-      .then((data) => {
-        console.log(data);
-      });
-    supabase
-      .from("restaurant_cuisines")
-      .delete()
-      .eq("restaurant_id", RestaurantID)
-      .select()
-      .then(({ data, error }) => {})
-      .then(() => {
-        supabase
-          .from("restaurant_cuisines")
-          .insert(newCuisines)
-          .select()
-          .then(({ data, error }) => {});
-      });
+      .then((data) => {});
+
+    if (toInsert.size) {
+      supabase
+        .from("restaurant_cuisines")
+        .insert(
+          Array.from(toInsert, (v) => ({
+            cuisine_id: v,
+            restaurant_id: RestaurantID,
+          }))
+        )
+        .select()
+        .then(({ data, error }) => console.log(error));
+    }
+
+    if (toDelete.size) {
+      supabase
+        .from("restaurant_cuisines")
+        .delete()
+        .in("cuisine_id", Array.from(toDelete))
+        .eq("restaurant_id", RestaurantID)
+        .select()
+        .then(({ data, error }) => console.log(error));
+    }
   };
 
   const removeCuisine = (e) => {
@@ -91,8 +105,10 @@ function ProfileEdit() {
       .select("*, restaurant_cuisines(*)")
       .eq("restaurant_id", RestaurantID)
       .then(({ data, error }) => {
-        setCurrent(data[0]);
-        setOld(data[0]);
+        const newData = { ...data[0] };
+        newData.restaurant_cuisines = [...data[0].restaurant_cuisines];
+        setCurrent({ ...data[0] });
+        setOld(newData);
       });
     supabase
       .from("cuisines")
@@ -145,15 +161,14 @@ function ProfileEdit() {
             {current.restaurant_cuisines.length < 3 ? (
               <label>
                 New Cuisine
-                <select onChange={addCuisine}>
+                <select onChange={addCuisine} id="selectCuisine">
                   {cuisines.map((cuisine) => {
                     return (
-                      <option value={cuisine.cuisine_id}>
-                        {
-                          cuisines.filter((entry) => {
-                            return entry.cuisine_id === cuisine.cuisine_id;
-                          })[0].cuisine_name
-                        }
+                      <option
+                        key={cuisine.cuisine_name}
+                        value={cuisine.cuisine_id}
+                      >
+                        {cuisine.cuisine_name}
                       </option>
                     );
                   })}
@@ -161,9 +176,9 @@ function ProfileEdit() {
               </label>
             ) : null}
             <ul>
-              {current.restaurant_cuisines.map((cuisine) => {
+              {current.restaurant_cuisines.map((cuisine, index) => {
                 return (
-                  <li key={current.restaurant_cuisines.indexOf(cuisine)}>
+                  <li key={index}>
                     {
                       cuisines.filter((entry) => {
                         return entry.cuisine_id === Number(cuisine.cuisine_id);
