@@ -23,9 +23,24 @@
   background-color: var(--tertiary);
 }
 
+.selectBox {
+  border: solid 2px var(--primary);
+  border-top: solid 0px;
+  padding: 10px;
+}
 
-.selectBox{
-    border: solid 2px var(--primary);
-    border-top: solid 0px;
-    padding: 10px;
+.inputBox {
+  @apply border-2 text-base font-normal;
+}
+
+.profileSectionTitle {
+  @apply text-xl font-bold col-span-2;
+}
+
+.profileOption {
+  @apply text-xl flex flex-col;
+}
+
+.cuisine{
+  @apply border-2 w-40 rounded-lg flex place-content-between bg-quinary my-2 p-0.5
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import supabase from "../../../supabaseClient";
 import { useAuth } from "../../hooks/Auth";
+import { IoMdCloseCircle } from "react-icons/io";
 
 function ProfileEdit() {
   const { session } = useAuth();
@@ -58,9 +59,10 @@ function ProfileEdit() {
 
   const removeCuisine = (e) => {
     const newCurrent = { ...current };
+    console.log(e.target);
     newCurrent.restaurant_cuisines = newCurrent.restaurant_cuisines.filter(
       (cuisine) => {
-        return cuisine.cuisine_id != e.target.id;
+        return cuisine.cuisine_id != (e.target.id || e.target.parentElement.id);
       }
     );
     setCurrent(newCurrent);
@@ -119,66 +121,61 @@ function ProfileEdit() {
   }, []);
 
   return (
-    <>
-      {RestaurantID ? (
-        <main>
-          <h3>{current.restaurant_name}</h3>
-          <div>
-            <label>
-              Restaurant Name
-              <input
-                id="restaurant_name"
-                type="text"
-                placeholder={current.restaurant_name}
-                onChange={changeCurr}
-              />
-            </label>
-            <h4>Profile</h4>
-            <img src={current.restaurant_img}></img>
-            <label>
-              Image URL
-              <input
-                id="restaurant_img"
-                type="text"
-                placeholder={current.restaurant_img}
-                onChange={changeCurr}
-              />
-            </label>
-            <br></br>
-            <label>
-              Description
-              <textarea
-                id="description"
-                placeholder={current.description}
-                value={current.description}
-                onChange={changeCurr}
-              ></textarea>
-            </label>
-          </div>
-          <div>
-            <h4>Food</h4>
-            {cuisines.length ? (
-              <div>
-                <h5>Cuisines</h5>
-                {current.restaurant_cuisines.length < 3 ? (
-                  <label>
-                    New Cuisine
-                    <select onChange={addCuisine} id="selectCuisine">
-                      {cuisines.map((cuisine) => {
-                        return (
-                          <option
-                            key={cuisine.cuisine_name}
-                            value={cuisine.cuisine_id}
-                          >
-                            {cuisine.cuisine_name}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </label>
-                ) : null}
-                <ul>
-                  {current.restaurant_cuisines.map((cuisine, index) => {
+    <main>
+      <h3 className="font-bold text-2xl border-y-4 px-4">
+        {current.restaurant_name}
+      </h3>
+      <div className="py-4 border-y-2 grid grid-cols-2 mx-2 gap-4">
+        <h4 className="profileSectionTitle">Profile</h4>
+        <label className="profileOption col-span-2">
+          Restaurant Name
+          <input
+            className="inputBox"
+            id="restaurant_name"
+            type="text"
+            placeholder={current.restaurant_name}
+            onChange={changeCurr}
+          />
+        </label>
+        <img
+          className="size-full object-contain"
+          src={current.restaurant_img}
+        ></img>
+        <label className="profileOption ">
+          Description
+          <textarea
+            className="inputBox size-full"
+            id="description"
+            placeholder={current.description}
+            value={current.description}
+            onChange={changeCurr}
+          ></textarea>
+        </label>
+        <label className="profileOption">
+          Image URL
+          <input
+            className="inputBox"
+            id="restaurant_img"
+            type="text"
+            placeholder={current.restaurant_img}
+            onChange={changeCurr}
+          />
+        </label>
+      </div>
+      <div className="py-4 border-y-2 grid grid-cols mx-2">
+        <h4 className="profileSectionTitle">Food</h4>
+        {cuisines.length ? (
+          <div className="flex flex-col items-center">
+            <h5 className="profileOption">Cuisines</h5>
+            {current.restaurant_cuisines.length < 3 ? (
+              <label className="text-base flex flex-col">
+                New Cuisine
+                <select
+                  onChange={addCuisine}
+                  className="text-base w-28"
+                  id="selectCuisine"
+                >
+                  {cuisines.map((cuisine) => {
                     return (
                       <li key={index}>
                         {
@@ -197,59 +194,81 @@ function ProfileEdit() {
                 </ul>
               </div>
             ) : null}
-            <div>
-              <h4>Menu</h4>
-              <label>
-                Menu Link
-                <input
-                  id="menu_link"
-                  type="text"
-                  placeholder={current.menu_link}
-                  onChange={changeCurr}
-                />
-              </label>
-              <label>
-                Is the menu an image?
-                <input
-                  id="is_menu_img"
-                  type="checkbox"
-                  onChange={changeCheckbox}
-                  checked={current.is_menu_img}
-                />
-                {current.is_menu_img ? <img src={current.menu_link} /> : null}
-              </label>
-            </div>
+            <ul>
+              {current.restaurant_cuisines.map((cuisine, index) => {
+                return (
+                  <li className="cuisine" key={index}>
+                    {
+                      cuisines.filter((entry) => {
+                        return entry.cuisine_id === Number(cuisine.cuisine_id);
+                      })[0].cuisine_name
+                    }
+                    <button id={cuisine.cuisine_id} onClick={removeCuisine}>
+                      <IoMdCloseCircle id={cuisine.cuisine_id} />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-          <div>
-            <h4>Contact Details</h4>
-            <label>
-              Address
-              <input />
-            </label>
-            <label>
-              Phone Number
-              <input
-                id="restaurant_phone_number"
-                type="text"
-                onChange={changeCurr}
-              />
-            </label>
-            <label>
-              Email
-              <input
-                id="restaurant_email"
-                type="text"
-                onChange={changeCurr}
-                placeholder={current.restaurant_email}
-              />
-            </label>
-          </div>
-          <button onClick={sendProfile}>Update Restaurant</button>
-        </main>
-      ) : (
-        <h2>NO RESTAURANT SELECTED</h2>
-      )}
-    </>
+        ) : null}
+        <div>
+          <h4 className="profileOption">Menu</h4>
+          <label>
+            Menu Link
+            <input
+              className="inputBox"
+              id="menu_link"
+              type="text"
+              placeholder={current.menu_link}
+              onChange={changeCurr}
+            />
+          </label>
+          <br></br>
+          {current.is_menu_img ? (
+            <img
+              className="size-64 object-contain my-2"
+              src={current.menu_link}
+            />
+          ) : null}
+          <label>
+            Is the menu an image?
+            <input
+              className="mx-2"
+              id="is_menu_img"
+              type="checkbox"
+              onChange={changeCheckbox}
+              checked={current.is_menu_img}
+            />
+          </label>
+        </div>
+      </div>
+      <div className="flex py-4 border-y-2 flex-col mx-2">
+        <h4 className="profileSectionTitle">Contact Details</h4>
+        <label className="profileOption">
+          Phone Number
+          <input
+            className="inputBox"
+            id="restaurant_phone_number"
+            type="text"
+            onChange={changeCurr}
+          />
+        </label>
+        <label className="profileOption">
+          Email
+          <input
+            className="inputBox"
+            id="restaurant_email"
+            type="text"
+            onChange={changeCurr}
+            placeholder={current.restaurant_email}
+          />
+        </label>
+      </div>
+      <button className="custButton" onClick={sendProfile}>
+        Update Restaurant
+      </button>
+    </main>
   );
 }
 
