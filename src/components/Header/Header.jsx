@@ -32,7 +32,7 @@ function Header() {
       )}
 
       <nav className="nav-bar">
-        <h2 className="nav-item">Place holder company name</h2>
+        <h2 className="nav-item">Late Plate</h2>
 
         <NavLink className="@apply custButton" to="/my-restaurants">
           My Restaurants
@@ -45,6 +45,9 @@ function Header() {
         </NavLink>
         <NavLink className="@apply custButton" to="/go-live">
           Go Live
+        </NavLink>
+        <NavLink className="@apply custButton" to="/settings">
+          Restaurant Settings
         </NavLink>
         {session ? (
           <>
