@@ -10,7 +10,16 @@
   --quinary: #e6e8e6;
 }
 
-body {
+.authInput {
+  @apply border-2 border-secondary px-2 py-1 w-full;
+}
+
+.authSubmit {
+  @apply px-2 py-1 bg-secondary text-white w-full;
+}
+
+.authForm {
+  @apply flex flex-col items-center shadow-2xl px-14 py-12 gap-8 bg-gradient-to-br from-slate-200 to-zinc-300 w-[26rem];
 }
 
 .navLink {

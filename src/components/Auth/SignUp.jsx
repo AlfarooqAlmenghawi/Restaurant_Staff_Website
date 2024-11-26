@@ -1,45 +1,53 @@
 import { Form, Link, redirect, useActionData } from "react-router-dom";
 import supabase from "../../../supabaseClient";
+import { ErrMsg } from "./ErrMsg";
 
 export const SignUp = () => {
   const returnedData = useActionData();
   return (
-    <Form method="post" action="/sign-up">
-      {returnedData?.error.code.startsWith("Passwords") && (
-        <p>The passwords you entered don't match</p>
-      )}
-      {returnedData?.error.code === "email_exists" && (
-        <p>
-          The email you provided is already in use. Try{" "}
-          <Link to="/sign-in">logging in</Link> instead
-        </p>
-      )}
-      <label htmlFor="email" />
-      <input
-        name="email"
-        id="email"
-        type="email"
-        placeholder="email"
-        required
-      />
-      <label htmlFor="password" />
-      <input
-        name="password"
-        id="password"
-        type="password"
-        placeholder="password"
-        required
-      />
-      <label htmlFor="confirmPassword" />
-      <input
-        name="confirmPassword"
-        id="confirmPassword"
-        type="password"
-        placeholder="confirm password"
-        required
-      />
-      <button type="submit">Sign Up</button>
-    </Form>
+    <div className="pt-[20vh] flex justify-center items-center">
+      <Form method="post" action="/sign-up" className="authForm">
+        <h2 className="text-2xl">Staff Sign Up</h2>
+        <div className="flex flex-col gap-4 w-full">
+          {returnedData?.error.code.startsWith("Passwords") && (
+            <ErrMsg>The passwords you entered don't match</ErrMsg>
+          )}
+          {returnedData?.error.code === "email_exists" && (
+            <ErrMsg>
+              The email you provided is already in use. Try{" "}
+              <Link to="/sign-in">logging in</Link> instead
+            </ErrMsg>
+          )}
+          <input
+            name="email"
+            id="email"
+            type="email"
+            placeholder="email"
+            className="authInput"
+            required
+          />
+          <input
+            name="password"
+            id="password"
+            type="password"
+            placeholder="password"
+            className="authInput"
+            required
+          />
+          <input
+            name="confirmPassword"
+            id="confirmPassword"
+            type="password"
+            placeholder="confirm password"
+            className="authInput"
+            required
+          />
+        </div>
+        <button type="submit" className="authSubmit">
+          Sign Up
+        </button>
+      </Form>
+    </div>
   );
 };
 
