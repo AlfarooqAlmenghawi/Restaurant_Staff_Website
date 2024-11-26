@@ -26,8 +26,12 @@
   @apply text-secondary bg-white px-2 py-1;
 }
 
-.navLink:hover {
+.navLink.active {
   @apply bg-secondary text-white;
+}
+
+.navLink:hover {
+  @apply bg-primaryMild text-white;
 }
 
 .custButton {
@@ -62,6 +66,6 @@
   @apply text-xl flex flex-col;
 }
 
-.cuisine{
-  @apply border-2 w-40 rounded-lg flex place-content-between bg-quinary my-2 p-0.5
+.cuisine {
+  @apply border-2 w-40 rounded-lg flex place-content-between bg-quinary my-2 p-0.5;
 }
