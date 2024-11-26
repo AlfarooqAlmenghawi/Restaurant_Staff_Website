@@ -80,7 +80,6 @@ const BookingTimeline = () => {
             end_time: moment(booking.duration.slice(27, 49)),
             canMove: false,
             canResize: false,
-            bgColor: "rgba(223, 41, 53, 1)",
           };
         });
         setBookings(bookings);
@@ -92,7 +91,6 @@ const BookingTimeline = () => {
 
     console.log("Supabase client:", supabase);
   }, [updater]);
-
 
   useEffect(() => {
     const commentsSubscription = supabase
@@ -144,7 +142,6 @@ const BookingTimeline = () => {
                   end_time: moment(booking.duration.slice(27, 49)),
                   canMove: false,
                   canResize: false,
-                  bgColor: "rgba(223, 41, 53, 1)",
                 };
               });
               setBookings(bookings);
@@ -163,7 +160,7 @@ const BookingTimeline = () => {
     return () => {
       supabase.removeChannel(commentsSubscription);
     };
-  });
+  }, []);
 
   //type selected value refers to the type of selected item. 0=nothing(default), 1=booking item, 2=table
 
@@ -201,23 +198,34 @@ const BookingTimeline = () => {
 
   return (
     <div>
-      <div className="mr-6 ml-6" >
+      <h3 className="text-4xl font-bold">Tables:</h3>
+      <div className="mr-6 ml-6">
         {groups.length && timelineEntries.length && (
           <Timeline
-          className="border-primary border-2"
+            className="border-primary border-2 text-wrap"
             groups={groups}
             items={timelineEntries}
             defaultTimeStart={moment().add(-12, "hour")}
             defaultTimeEnd={moment().add(12, "hour")}
-            minZoom={60 * 60 * 1000}
-            maxZoom={365.24 * 86400 * 1000}
+            minZoom={24 * 60 * 60 * 1000}
+            maxZoom={7 * 24 * 60 * 60 * 1000}
+            selectedBgColor="#df2935"
+            minResizeWidth={20}
             onItemSelect={(itemId, e, time) => {
               selectBookingHandler(itemId, e, time, bookings, tables);
             }}
           >
-            <TimelineHeaders>
-              <SidebarHeader></SidebarHeader>
-              <DateHeader unit="primaryHeader" />
+            <TimelineHeaders style={{ backgroundColor: "#df2935" }}>
+              <SidebarHeader
+                style={{ backgroundColor: "#df2935" }}
+              ></SidebarHeader>
+              <DateHeader
+                unit="primaryHeader"
+                style={{ backgroundColor: "#df2935" }}
+              />
+              {({ getRootProps, data }) => {
+                return <div {...getRootProps()}> {data.someData}</div>;
+              }}
               <DateHeader />
             </TimelineHeaders>
             <TimelineMarkers>

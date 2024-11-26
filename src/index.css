@@ -27,4 +27,5 @@
 .selectBox{
     border: solid 2px var(--primary);
     border-top: solid 0px;
+    padding: 10px;
 }
