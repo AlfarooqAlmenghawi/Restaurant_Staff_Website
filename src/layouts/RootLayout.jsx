@@ -5,7 +5,7 @@ export const RootLayout = () => {
   return (
     <>
       <Header />
-      <main>
+      <main className="px-[20vw] sm:max-lg:w-[614px] sm:max-lg:px-0 sm:max-lg:mx-auto">
         <Outlet />
       </main>
     </>

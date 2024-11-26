@@ -10,13 +10,34 @@
   --quinary: #e6e8e6;
 }
 
+.authInput {
+  @apply border-2 border-secondary px-2 py-1 w-full;
+}
+
+.authSubmit {
+  @apply px-2 py-1 bg-secondary text-white w-full;
+}
+
+.authForm {
+  @apply flex flex-col items-center shadow-2xl px-14 py-12 gap-8 bg-gradient-to-br from-slate-200 to-zinc-300 w-[26rem];
+}
+
+.navLink {
+  @apply text-secondary bg-white px-2 py-1;
+}
+
+.navLink:hover {
+  @apply bg-secondary text-white;
+}
+
 .custButton {
-  background-color: var(--secondary);
+  @apply bg-secondary text-white px-1 py-[2px] mt-2;
+  /* background-color: var(--secondary);
   color: white;
   padding: 2px;
   padding-left: 4px;
   padding-right: 4px;
-  margin-top: 8px;
+  margin-top: 8px; */
 }
 
 .custButton:hover {

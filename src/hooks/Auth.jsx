@@ -41,8 +41,10 @@ export const AuthProvider = ({ children }) => {
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        session &&
-          setSession({ ...session, restaurant_id: selectedRestaurant });
+        console.log(session);
+        session
+          ? setSession({ ...session, restaurant_id: selectedRestaurant })
+          : setSession(session);
         setUser(session?.user);
         setLoading(false);
       }
@@ -61,6 +63,7 @@ export const AuthProvider = ({ children }) => {
     updateRestaurant,
     signOut: async (shouldRedirect) => {
       const { error } = await supabase.auth.signOut();
+      if (error) setSession(null);
       shouldRedirect && redirect("/sign-in");
     },
   };

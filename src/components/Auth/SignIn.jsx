@@ -7,6 +7,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { useAuth } from "../../hooks/Auth";
+import { ErrMsg } from "./ErrMsg";
 
 export const SignIn = () => {
   const [searchParams] = useSearchParams();
@@ -15,41 +16,52 @@ export const SignIn = () => {
   const returnedFormData = useActionData();
   if (session) redirect(redirectPath);
   return (
-    <Form method="post" action="/sign-in">
-      {returnedFormData?.error.code === "invalid_credentials" && (
-        <p>Invalid credentials. Please check your details and try again.</p>
-      )}
-      {returnedFormData?.error.code === "email_not_confirmed" && (
+    <div className="pt-[20vh] flex justify-center items-center">
+      <Form method="post" action="/sign-in" className="authForm">
+        <h2 className="text-2xl">Staff Sign In</h2>
+        <div className="flex flex-col gap-4 w-full">
+          {returnedFormData?.error.code === "invalid_credentials" && (
+            <ErrMsg>
+              Invalid credentials. Please check your details and try again.
+            </ErrMsg>
+          )}
+          {returnedFormData?.error.code === "email_not_confirmed" && (
+            <ErrMsg>
+              You haven't confirmed your email address yet. Please check your
+              inbox or junk folder for an email asking you to confirm your
+              account.
+            </ErrMsg>
+          )}
+          <input
+            name="email"
+            id="email"
+            type="email"
+            placeholder="email"
+            className="authInput"
+            required
+          />
+          <input
+            name="password"
+            id="password"
+            type="password"
+            placeholder="password"
+            className="authInput"
+            required
+          />
+          <input name="redirectPath" readOnly hidden value={redirectPath} />
+        </div>
+        <button type="submit" className="authSubmit">
+          Sign In
+        </button>
         <p>
-          You haven't confirmed your email address yet. Please check your inbox
-          or junk folder for an email asking you to confirm your account.
+          Don't have an account yet?{" "}
+          <Link to="/sign-up" className="underline text-secondary">
+            Sign up
+          </Link>{" "}
+          here
         </p>
-      )}
-      <label htmlFor="email" />
-      <input
-        name="email"
-        id="email"
-        type="email"
-        placeholder="email"
-        required
-      />
-      <label htmlFor="password" />
-      <input
-        name="password"
-        id="password"
-        type="password"
-        placeholder="password"
-        required
-      />
-      <input name="redirectPath" readOnly hidden value={redirectPath} />
-      <button type="submit">Sign In</button>
-      <p>
-        Don't have an account yet?{" "}
-        <Link to="/sign-up">
-          <em>Sign up here</em>
-        </Link>
-      </p>
-    </Form>
+      </Form>
+    </div>
   );
 };
 
