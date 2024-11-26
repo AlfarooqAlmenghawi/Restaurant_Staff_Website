@@ -141,7 +141,7 @@ function ProfileEdit() {
           className="size-full object-contain"
           src={current.restaurant_img}
         ></img>
-        <label className="profileOption ">
+        <label className="profileOption">
           Description
           <textarea
             className="inputBox size-full"
@@ -175,7 +175,7 @@ function ProfileEdit() {
                   className="text-base w-28"
                   id="selectCuisine"
                 >
-                  {cuisines.map((cuisine) => {
+                  {cuisines.map((cuisine, index) => {
                     return (
                       <li key={index}>
                         {

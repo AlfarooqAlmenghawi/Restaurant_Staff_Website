@@ -2,6 +2,7 @@ import moment from "moment";
 import { useAuth } from "../../../hooks/Auth";
 import supabase from "../../../../supabaseClient";
 
+
 function SelectedTable({ selectedTable, setSelectedTable, setUpdater }) {
   const {
     user,
@@ -40,17 +41,25 @@ function SelectedTable({ selectedTable, setSelectedTable, setUpdater }) {
     <div className="@apply selectBox">
       <p className="font-bold">{selectedTable.table_name}</p>
       <p>Seats {selectedTable.size}</p>
-      {selectedTable.bookingStatus ? (<>
-      <p className="text-red-600 font-bold">Currently Occupied</p>
-        <button className="bg-red-600 p-2 hover:bg-green-600" onClick={freeTableHandler}>
-          Toggle Availability
-        </button></>
+      {selectedTable.bookingStatus ? (
+        <>
+          <p className="text-red-600 font-bold">Currently Occupied</p>
+          <button
+            className="bg-red-600 p-2 hover:bg-green-600"
+            onClick={freeTableHandler}
+          >
+            Toggle Availability
+          </button>
+        </>
       ) : (
         <>
-        <p className="text-green-600 font-bold">Currently Free</p>
-        <button className="bg-green-600 p-2 hover:bg-red-600" onClick={occupyTableHandler}>
-          Toggle Availability
-        </button>
+          <p className="text-green-600 font-bold">Currently Free</p>
+          <button
+            className="bg-green-600 p-2 hover:bg-red-600"
+            onClick={occupyTableHandler}
+          >
+            Toggle Availability
+          </button>
         </>
       )}
     </div>

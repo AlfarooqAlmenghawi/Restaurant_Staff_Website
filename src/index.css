@@ -62,6 +62,6 @@
   @apply text-xl flex flex-col;
 }
 
-.cuisine{
-  @apply border-2 w-40 rounded-lg flex place-content-between bg-quinary my-2 p-0.5
+.cuisine {
+  @apply border-2 w-40 rounded-lg flex place-content-between bg-quinary my-2 p-0.5;
 }
