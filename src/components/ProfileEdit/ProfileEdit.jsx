@@ -191,8 +191,8 @@ function ProfileEdit() {
                       </li>
                     );
                   })}
-                </ul>
-              </div>
+                </select>
+              </label>
             ) : null}
             <ul>
               {current.restaurant_cuisines.map((cuisine, index) => {
