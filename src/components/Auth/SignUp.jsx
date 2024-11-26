@@ -6,7 +6,7 @@ export const SignUp = () => {
   return (
     <Form method="post" action="/sign-up">
       {returnedData?.error.code.startsWith("Passwords") && (
-        <p>Error: {returnedData.error}</p>
+        <p>The passwords you entered don't match</p>
       )}
       {returnedData?.error.code === "email_exists" && (
         <p>

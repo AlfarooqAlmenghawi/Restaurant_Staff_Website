@@ -249,7 +249,7 @@ function CreateRestaurant() {
                     value={`${location.properties.lat}, ${location.properties.lon}`}
                     onClick={chooseLocation}
                   >
-                    Select this location
+                    This is my restaurant location!
                   </button>
                 </div>
               ))}
@@ -348,7 +348,7 @@ function CreateRestaurant() {
           />
         </label>
       </div>
-      <button onClick={sendProfile}>update</button>
+      <button onClick={sendProfile}>Create Restaurant</button>
     </main>
   );
 }
