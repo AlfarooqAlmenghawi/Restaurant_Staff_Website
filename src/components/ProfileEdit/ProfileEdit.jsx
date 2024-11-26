@@ -119,129 +119,137 @@ function ProfileEdit() {
   }, []);
 
   return (
-    <main>
-      <h3>{current.restaurant_name}</h3>
-      <div>
-        <label>
-          Restaurant Name
-          <input
-            id="restaurant_name"
-            type="text"
-            placeholder={current.restaurant_name}
-            onChange={changeCurr}
-          />
-        </label>
-        <h4>Profile</h4>
-        <img src={current.restaurant_img}></img>
-        <label>
-          Image URL
-          <input
-            id="restaurant_img"
-            type="text"
-            placeholder={current.restaurant_img}
-            onChange={changeCurr}
-          />
-        </label>
-        <br></br>
-        <label>
-          Description
-          <textarea
-            id="description"
-            placeholder={current.description}
-            value={current.description}
-            onChange={changeCurr}
-          ></textarea>
-        </label>
-      </div>
-      <div>
-        <h4>Food</h4>
-        {cuisines.length ? (
+    <>
+      {RestaurantID ? (
+        <main>
+          <h3>{current.restaurant_name}</h3>
           <div>
-            <h5>Cuisines</h5>
-            {current.restaurant_cuisines.length < 3 ? (
-              <label>
-                New Cuisine
-                <select onChange={addCuisine} id="selectCuisine">
-                  {cuisines.map((cuisine) => {
+            <label>
+              Restaurant Name
+              <input
+                id="restaurant_name"
+                type="text"
+                placeholder={current.restaurant_name}
+                onChange={changeCurr}
+              />
+            </label>
+            <h4>Profile</h4>
+            <img src={current.restaurant_img}></img>
+            <label>
+              Image URL
+              <input
+                id="restaurant_img"
+                type="text"
+                placeholder={current.restaurant_img}
+                onChange={changeCurr}
+              />
+            </label>
+            <br></br>
+            <label>
+              Description
+              <textarea
+                id="description"
+                placeholder={current.description}
+                value={current.description}
+                onChange={changeCurr}
+              ></textarea>
+            </label>
+          </div>
+          <div>
+            <h4>Food</h4>
+            {cuisines.length ? (
+              <div>
+                <h5>Cuisines</h5>
+                {current.restaurant_cuisines.length < 3 ? (
+                  <label>
+                    New Cuisine
+                    <select onChange={addCuisine} id="selectCuisine">
+                      {cuisines.map((cuisine) => {
+                        return (
+                          <option
+                            key={cuisine.cuisine_name}
+                            value={cuisine.cuisine_id}
+                          >
+                            {cuisine.cuisine_name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </label>
+                ) : null}
+                <ul>
+                  {current.restaurant_cuisines.map((cuisine, index) => {
                     return (
-                      <option
-                        key={cuisine.cuisine_name}
-                        value={cuisine.cuisine_id}
-                      >
-                        {cuisine.cuisine_name}
-                      </option>
+                      <li key={index}>
+                        {
+                          cuisines.filter((entry) => {
+                            return (
+                              entry.cuisine_id === Number(cuisine.cuisine_id)
+                            );
+                          })[0].cuisine_name
+                        }
+                        <button id={cuisine.cuisine_id} onClick={removeCuisine}>
+                          X
+                        </button>
+                      </li>
                     );
                   })}
-                </select>
-              </label>
+                </ul>
+              </div>
             ) : null}
-            <ul>
-              {current.restaurant_cuisines.map((cuisine, index) => {
-                return (
-                  <li key={index}>
-                    {
-                      cuisines.filter((entry) => {
-                        return entry.cuisine_id === Number(cuisine.cuisine_id);
-                      })[0].cuisine_name
-                    }
-                    <button id={cuisine.cuisine_id} onClick={removeCuisine}>
-                      X
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
+            <div>
+              <h4>Menu</h4>
+              <label>
+                Menu Link
+                <input
+                  id="menu_link"
+                  type="text"
+                  placeholder={current.menu_link}
+                  onChange={changeCurr}
+                />
+              </label>
+              <label>
+                Is the menu an image?
+                <input
+                  id="is_menu_img"
+                  type="checkbox"
+                  onChange={changeCheckbox}
+                  checked={current.is_menu_img}
+                />
+                {current.is_menu_img ? <img src={current.menu_link} /> : null}
+              </label>
+            </div>
           </div>
-        ) : null}
-        <div>
-          <h4>Menu</h4>
-          <label>
-            Menu Link
-            <input
-              id="menu_link"
-              type="text"
-              placeholder={current.menu_link}
-              onChange={changeCurr}
-            />
-          </label>
-          <label>
-            Is the menu an image?
-            <input
-              id="is_menu_img"
-              type="checkbox"
-              onChange={changeCheckbox}
-              checked={current.is_menu_img}
-            />
-            {current.is_menu_img ? <img src={current.menu_link} /> : null}
-          </label>
-        </div>
-      </div>
-      <div>
-        <h4>Contact Details</h4>
-        <label>
-          Address
-          <input />
-        </label>
-        <label>
-          Phone Number
-          <input
-            id="restaurant_phone_number"
-            type="text"
-            onChange={changeCurr}
-          />
-        </label>
-        <label>
-          Email
-          <input
-            id="restaurant_email"
-            type="text"
-            onChange={changeCurr}
-            placeholder={current.restaurant_email}
-          />
-        </label>
-      </div>
-      <button onClick={sendProfile}>Update Restaurant</button>
-    </main>
+          <div>
+            <h4>Contact Details</h4>
+            <label>
+              Address
+              <input />
+            </label>
+            <label>
+              Phone Number
+              <input
+                id="restaurant_phone_number"
+                type="text"
+                onChange={changeCurr}
+              />
+            </label>
+            <label>
+              Email
+              <input
+                id="restaurant_email"
+                type="text"
+                onChange={changeCurr}
+                placeholder={current.restaurant_email}
+              />
+            </label>
+          </div>
+          <button onClick={sendProfile}>Update Restaurant</button>
+        </main>
+      ) : (
+        <h2>NO RESTAURANT SELECTED</h2>
+      )}
+    </>
   );
 }
 
