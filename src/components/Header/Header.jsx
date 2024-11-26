@@ -7,6 +7,7 @@ import Logo from "../../svgs/logo.svg?react";
 
 function Header() {
   const { user, session, signOut } = useAuth();
+  const [currentRestaurant, setCurrentRestaurant] = useState("");
   useEffect(() => {
     session?.restaurant_id &&
       supabase
@@ -17,42 +18,44 @@ function Header() {
           console.log(data || error);
           setCurrentRestaurant(data[0].restaurant_name);
         });
-  }, []);
+  }, [session]);
 
   return (
-    <>
-      <Logo />
-      {session?.restaurant_id && (
-        <h1 className="restaurant-title">{currentRestaurant}</h1>
-      )}
-
-      <nav className="flex">
-        <NavLink className="@apply custButton" to="/my-restaurants">
-          My Restaurants
-        </NavLink>
-        <NavLink className="@apply custButton" to="/tables">
-          Tables
-        </NavLink>
-        <NavLink className="@apply custButton" to="/restaurant-new">
-          Create New Restaurant
-        </NavLink>
-        <NavLink className="@apply custButton" to="/go-live">
-          Go Live
-        </NavLink>
-        {session ? (
-          <>
-            <p>Welcome, {user?.email}!</p>
-            <button onClick={signOut} className="@apply custButton">
-              Sign Out
-            </button>
-          </>
-        ) : (
-          <NavLink to="/sign-in" className="@apply custButton">
-            Sign In
-          </NavLink>
-        )}
-      </nav>
-    </>
+    <div className="border-b-4 border-secondary">
+      <div className="flex items-end px-[20vw] sm:max-lg:w-[614px] sm:max-lg:px-0 sm:max-lg:mx-auto">
+        <Logo className="mt-4 w-20 aspect-auto" />
+        <div className="flex flex-col ml-auto items-end">
+          {session?.restaurant_id && (
+            <h1 className="inline">Selected Restaurant: {currentRestaurant}</h1>
+          )}
+          <nav className="flex justify-end">
+            <NavLink className="navLink" to="/my-restaurants">
+              My Restaurants
+            </NavLink>
+            <NavLink className="navLink" to="/tables">
+              Tables
+            </NavLink>
+            <NavLink className="navLink" to="/restaurant-new">
+              Create New Restaurant
+            </NavLink>
+            <NavLink className="navLink" to="/go-live">
+              Go Live
+            </NavLink>
+            {session?.user ? (
+              <>
+                <button onClick={signOut} className="navLink">
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <NavLink to="/sign-in" className="navLink">
+                Sign In
+              </NavLink>
+            )}
+          </nav>
+        </div>
+      </div>
+    </div>
   );
 }
 

@@ -10,22 +10,33 @@
   --quinary: #e6e8e6;
 }
 
+body {
+}
+
+.navLink {
+  @apply text-secondary bg-white px-2 py-1;
+}
+
+.navLink:hover {
+  @apply bg-secondary text-white;
+}
+
 .custButton {
-  background-color: var(--secondary);
+  @apply bg-secondary text-white px-1 py-[2px] mt-2;
+  /* background-color: var(--secondary);
   color: white;
   padding: 2px;
   padding-left: 4px;
   padding-right: 4px;
-  margin-top: 8px;
+  margin-top: 8px; */
 }
 
 .custButton:hover {
   background-color: var(--tertiary);
 }
 
-
-.selectBox{
-    border: solid 2px var(--primary);
-    border-top: solid 0px;
-    padding: 10px;
+.selectBox {
+  border: solid 2px var(--primary);
+  border-top: solid 0px;
+  padding: 10px;
 }

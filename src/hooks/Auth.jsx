@@ -41,8 +41,10 @@ export const AuthProvider = ({ children }) => {
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        session &&
-          setSession({ ...session, restaurant_id: selectedRestaurant });
+        console.log(session);
+        session
+          ? setSession({ ...session, restaurant_id: selectedRestaurant })
+          : setSession(session);
         setUser(session?.user);
         setLoading(false);
       }
