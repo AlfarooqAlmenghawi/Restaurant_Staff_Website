@@ -18,6 +18,7 @@ import ProfileEdit from "./components/ProfileEdit/ProfileEdit.jsx";
 import MyRestaurants from "./components/MyRestaurants/MyRestaurants.jsx";
 import { ProtectedRoute } from "./components/Auth/ProtectedRoute.jsx";
 import CreateRestaurant from "./components/CreateRestaurant/CreateRestaurant.jsx";
+import GoLive from "./components/GoLive/GoLive.jsx";
 import Settings from "./components/Settings/Settings.jsx";
 
 const router = createBrowserRouter(
@@ -55,6 +56,14 @@ const router = createBrowserRouter(
         element={
           <ProtectedRoute>
             <Settings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="go-live"
+        element={
+          <ProtectedRoute>
+            <GoLive />
           </ProtectedRoute>
         }
       />

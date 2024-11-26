@@ -4,7 +4,6 @@ import { useAuth } from "../../hooks/Auth";
 import { Link, useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 
-
 function MyRestaurants() {
   const [restaurantsOfStaff, setRestaurantsOfStaff] = useState([]);
   const {
@@ -22,6 +21,11 @@ function MyRestaurants() {
   function handleEdit(event) {
     updateRestaurant(event.target.id);
     navigate("/profile");
+  }
+
+  function handleNavigationToGoLive(event) {
+    updateRestaurant(event.target.id);
+    navigate("/go-live");
   }
 
   function newRestaurantHandler(event) {
@@ -74,12 +78,23 @@ function MyRestaurants() {
                 >
                   Edit Profile
                 </button>
+                <button
+                  className="@apply custButton"
+                  onClick={handleNavigationToGoLive}
+                  id={restaurant.restaurants.restaurant_id}
+                >
+                  Go Live
+                </button>
               </div>
             </div>
           );
         })}
-        <button className="border-4 hover:border-tertiary flex m-4 p-2 w-1/4 bg-quinary justify-center items-center rounded-lg" onClick={newRestaurantHandler}>
-        <FaPlus className="size-20" /></button>
+        <button
+          className="border-4 hover:border-tertiary flex m-4 p-2 w-1/4 bg-quinary justify-center items-center rounded-lg"
+          onClick={newRestaurantHandler}
+        >
+          <FaPlus className="size-20" />
+        </button>
       </div>
     </>
   );
