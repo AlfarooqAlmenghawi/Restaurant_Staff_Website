@@ -18,12 +18,19 @@ import ProfileEdit from "./components/ProfileEdit/ProfileEdit.jsx";
 import MyRestaurants from "./components/MyRestaurants/MyRestaurants.jsx";
 import { ProtectedRoute } from "./components/Auth/ProtectedRoute.jsx";
 import CreateRestaurant from "./components/CreateRestaurant/CreateRestaurant.jsx";
+import Settings from "./components/Settings/Settings.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
-      <Route path="test" element={<p>Other path</p>} />
-      <Route path="tables" element={<Tables />} />
+      <Route
+        path="tables"
+        element={
+          <ProtectedRoute>
+            <Tables />
+          </ProtectedRoute>
+        }
+      />
       <Route path="sign-in" element={<SignIn />} action={signInAction} />
       <Route path="sign-up" element={<SignUp />} action={signUpAction} />
       <Route
@@ -43,6 +50,14 @@ const router = createBrowserRouter(
         }
       />
       <Route path="restaurant-new" element={<CreateRestaurant />} />
+      <Route
+        path="settings"
+        element={
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
+        }
+      />
     </Route>
   )
 );

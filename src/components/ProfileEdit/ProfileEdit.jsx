@@ -177,16 +177,22 @@ function ProfileEdit() {
                 >
                   {cuisines.map((cuisine) => {
                     return (
-                      <option
-                        key={cuisine.cuisine_name}
-                        value={cuisine.cuisine_id}
-                      >
-                        {cuisine.cuisine_name}
-                      </option>
+                      <li key={index}>
+                        {
+                          cuisines.filter((entry) => {
+                            return (
+                              entry.cuisine_id === Number(cuisine.cuisine_id)
+                            );
+                          })[0].cuisine_name
+                        }
+                        <button id={cuisine.cuisine_id} onClick={removeCuisine}>
+                          X
+                        </button>
+                      </li>
                     );
                   })}
-                </select>
-              </label>
+                </ul>
+              </div>
             ) : null}
             <ul>
               {current.restaurant_cuisines.map((cuisine, index) => {
