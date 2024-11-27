@@ -175,7 +175,7 @@ function ProfileEdit() {
                   className="text-base w-28"
                   id="selectCuisine"
                 >
-                  {cuisines.map((cuisine) => {
+                  {cuisines.map((cuisine, index) => {
                     return (
                       <li key={index}>
                         {

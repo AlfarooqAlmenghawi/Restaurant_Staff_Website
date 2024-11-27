@@ -116,27 +116,34 @@ function Settings() {
     <>
       {currentRestaurant ? (
         <div>
-          <h2>
+          <h2 className="underline font-bold text-3xl">
             You are modifying the settings for:{" "}
             {currentRestaurant.restaurant_name}
           </h2>
-          <p>Modify Default Booking Duration (in minutes)</p>
-          <input
-            id="default_booking_duration"
-            placeholder={currentRestaurant.default_booking_duration}
-            onChange={changeCurr}
-          />
+          <div className="m-0 text-center">
+            <p>Modify Default Booking Duration (in minutes)</p>
+            <input
+              className="m-0 text-center"
+              id="default_booking_duration"
+              placeholder={currentRestaurant.default_booking_duration}
+              onChange={changeCurr}
+            />
+          </div>
           <br></br>
           {tablesOfTheCurrentRestaurant.map((table) => {
             return (
               <>
-                <word>
+                <p className="bg-red-50 w-100">
                   TableID: {table.table_id} | Table Name: {table.table_name} |
-                  Seats Available: {table.size}
-                </word>{" "}
-                <button id={table.table_id} onClick={deleteTable}>
-                  X
-                </button>
+                  Seats Available: {table.size}{" "}
+                  <button
+                    className="bg-red-400 hover:bg-red-300 focus:bg-red-200"
+                    id={table.table_id}
+                    onClick={deleteTable}
+                  >
+                    Delete This Table
+                  </button>
+                </p>{" "}
                 <br></br>
               </>
             );
