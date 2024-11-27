@@ -18,7 +18,7 @@ export const RestaurantCard = ({
   return (
     <div
       onClick={handleClick}
-      className={`border-4 flex p-2 w-80px/4 bg-quinary rounded-lg gap-2 hover:border-tertiary ${
+      className={`border-4 flex p-2 w-80px/4 bg-quinary rounded-lg gap-2 transition-colors hover:border-tertiary ${
         isSelected && "border-quaternary"
       }`}
     >
