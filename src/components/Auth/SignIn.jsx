@@ -2,25 +2,29 @@ import supabase from "../../../supabaseClient";
 import {
   Form,
   Link,
-  useActionData,
+  useLocation,
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
 import { useAuth } from "../../hooks/Auth";
 import { ErrMsg } from "./ErrMsg";
 import { BarLoader } from "react-spinners";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const SignIn = () => {
   const [searchParams] = useSearchParams();
   const redirectPath = searchParams.get("redirectPath")?.replace("%2F", "/");
-  const { session } = useAuth;
-  const returnedFormData = useActionData();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  if (session) navigate(redirectPath);
+  const hasRedirected = useLocation().state?.hasRedirected;
 
+  useEffect(() => {
+    hasRedirected &&
+      toast.error("Sorry, you need to sign in to access that page");
+  });
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
