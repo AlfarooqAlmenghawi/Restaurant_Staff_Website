@@ -28,7 +28,7 @@ function MyRestaurants() {
 
   return (
     <>
-      <h3 className="font-bold text-2xl border-y-4 px-4">Your Restaurants</h3>
+      <h3 className="pageTitle">Your Restaurants</h3>
       <div className="flex bg flex-wrap gap-4 mt-6">
         {restaurantsOfStaff?.map(({ restaurants }) => (
           <RestaurantCard

@@ -146,14 +146,11 @@ function CreateRestaurant() {
       });
   }, []);
 
-  useEffect(() => {
-  }, [locationsResult]);
+  useEffect(() => {}, [locationsResult]);
 
   return (
     <main>
-      <h3 className="font-bold text-2xl border-y-4 px-4">
-        {current.restaurant_name}
-      </h3>
+      <h3 className="pageTitle">New Restaurant</h3>
       <div className="py-4 border-y-2 grid grid-cols-2 mx-2 gap-4">
         <h4 className="profileSectionTitle">Profile</h4>
         <label className="profileOption col-span-2">

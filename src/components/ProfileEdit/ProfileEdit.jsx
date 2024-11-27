@@ -122,8 +122,8 @@ function ProfileEdit() {
 
   return (
     <main>
-      <h3 className="font-bold text-2xl border-y-4 px-4">
-        {current.restaurant_name}
+      <h3 className="pageTitle">
+        Edit Profile
       </h3>
       <div className="py-4 border-y-2 grid grid-cols-2 mx-2 gap-4">
         <h4 className="profileSectionTitle">Profile</h4>
