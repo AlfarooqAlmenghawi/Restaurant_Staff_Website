@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import supabase from "../../../../supabaseClient.js";
 import { FaPhoneAlt, FaCrown, FaWalking, FaClock } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
+import Icon from "../../../svgs/icon.svg?react";
 
 function SelectedBooking({ selectedBooking, selectedTable, setTypeSelected }) {
   const [bookingExistence, setBookingExistence] = useState(true);
@@ -32,7 +33,7 @@ function SelectedBooking({ selectedBooking, selectedTable, setTypeSelected }) {
   useEffect(() => {
     if (selectedBooking.type === 0) {
       setBookingType("Booked on App");
-      setTypeIcon(<FaCrown className="mr-1" />);
+      setTypeIcon(<Icon className="size-6" />);
     } else if (selectedBooking.type === 1) {
       setBookingType("Walk In");
       setTypeIcon(<FaWalking className="mr-1" />);
