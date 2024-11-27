@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import supabase from "../../supabaseClient";
-import { redirect } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { useSessionStorage } from "./useStorage";
 
 const AuthContext = createContext({
@@ -64,7 +64,11 @@ export const AuthProvider = ({ children }) => {
       const { error } = await supabase.auth.signOut();
       setSelectedRestaurant(null);
       if (error) setSession(null);
-      shouldRedirect && redirect("/sign-in");
+      const { data, error: e2 } = await supabase.auth.setSession({
+        access_token: null,
+        refresh_token: null,
+      });
+      redirect("/sign-in");
     },
   };
 

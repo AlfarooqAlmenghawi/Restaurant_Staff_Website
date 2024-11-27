@@ -1,18 +1,14 @@
-import { useState } from "react";
-import { useContext } from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
-  Link,
   RouterProvider,
 } from "react-router-dom";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Header from "./components/Header/Header.jsx";
+import { Route } from "react-router-dom";
 import Tables from "./components/Tables/Tables.jsx";
 import { SignIn } from "./components/Auth/SignIn.jsx";
 import { AuthProvider } from "./hooks/Auth.jsx";
 import { RootLayout } from "./layouts/RootLayout.jsx";
-import { SignUp, signUpAction } from "./components/Auth/SignUp.jsx";
+import { SignUp } from "./components/Auth/SignUp.jsx";
 import ProfileEdit from "./components/ProfileEdit/ProfileEdit.jsx";
 import MyRestaurants from "./components/MyRestaurants/MyRestaurants.jsx";
 import { ProtectedRoute } from "./components/Auth/ProtectedRoute.jsx";
@@ -26,17 +22,17 @@ const router = createBrowserRouter(
       <Route
         path="tables"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute requiresRestaurant={true}>
             <Tables />
           </ProtectedRoute>
         }
       />
       <Route path="sign-in" element={<SignIn />} />
-      <Route path="sign-up" element={<SignUp />} action={signUpAction} />
+      <Route path="sign-up" element={<SignUp />} />
       <Route
         path="profile"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute requiresRestaurant={true}>
             <ProfileEdit />
           </ProtectedRoute>
         }
@@ -49,11 +45,18 @@ const router = createBrowserRouter(
           </ProtectedRoute>
         }
       />
-      <Route path="restaurant-new" element={<CreateRestaurant />} />
+      <Route
+        path="restaurant-new"
+        element={
+          <ProtectedRoute>
+            <CreateRestaurant />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="settings"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute requiresRestaurant={true}>
             <Settings />
           </ProtectedRoute>
         }
@@ -61,7 +64,7 @@ const router = createBrowserRouter(
       <Route
         path="go-live"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute requiresRestaurant={true}>
             <GoLive />
           </ProtectedRoute>
         }

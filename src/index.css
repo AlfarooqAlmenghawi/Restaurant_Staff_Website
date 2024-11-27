@@ -47,13 +47,12 @@
 }
 
 .custButton {
-  @apply bg-secondary text-white px-1 py-[2px] mt-2;
+  @apply bg-secondary text-white px-1 py-[2px] mt-2 transition-colors duration-75;
 }
 
 .custButton:hover {
   background-color: var(--tertiary);
 }
-
 
 .inputBox {
   @apply border-2 text-base font-normal;
