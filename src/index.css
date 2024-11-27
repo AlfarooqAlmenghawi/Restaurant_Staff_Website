@@ -62,3 +62,9 @@
 .cuisine {
   @apply border-2 w-40 rounded-lg flex place-content-between bg-quinary my-2 p-0.5;
 }
+
+.delete-restaurant-button {
+  background-color: red;
+  width: 500px;
+  margin: auto;
+}
