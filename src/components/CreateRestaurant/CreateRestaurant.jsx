@@ -24,17 +24,14 @@ function CreateRestaurant() {
     if (sendData.restaurant_cuisines.length) {
       delete sendData.restaurant_cuisines;
     }
-    console.log(sendData);
     const latitude = selectedLocation.latitude;
     const longitude = selectedLocation.longitude;
-
     sendData.location = `point(${longitude} ${latitude})`;
     supabase
       .from("restaurants")
       .insert(sendData)
       .select()
       .then(({ data }) => {
-        console.log(data[0].restaurant_id);
         supabase
           .from("staff_restaurant")
           .insert({
@@ -42,33 +39,29 @@ function CreateRestaurant() {
             restaurant_id: data[0].restaurant_id,
           })
           .select()
-          .then((data) => {});
+          .then((data) => {
+            console.log(data);
+          });
+        newCuisines.forEach((cuisine) => {
+          cuisine.restaurant_id = data[0].restaurant_id;
+        });
+        supabase
+          .from("restaurant_cuisines")
+          .insert(newCuisines)
+          .select()
+          .then(({ data, error }) => {
+            error ? console.log(error) : console.log(data);
+          });
       });
-    // supabase
-    //   .from("restaurant_cuisines")
-    //   .select()
-    //   .then(({ data, error }) => {
-    //     supabase
-    //       .from("restaurant_cuisines")
-    //       .insert(newCuisines)
-    //       .select()
-    //       .then(({ data, error }) => {});
-    //   });
   };
 
   const removeCuisine = (e) => {
     const newCurrent = { ...current };
-    console.log("Before:", newCurrent);
-    console.log(e.target.id);
-
     newCurrent.restaurant_cuisines = newCurrent.restaurant_cuisines.filter(
       (cuisine) => {
-        console.log(typeof cuisine.cuisine_id);
-        console.log(typeof e.target.id);
         return cuisine.cuisine_id != e.target.id;
       }
     );
-    console.log("After:", newCurrent);
     setCurrent(newCurrent);
   };
 
@@ -83,8 +76,6 @@ function CreateRestaurant() {
   };
 
   const setCurrentLocation = (e) => {
-    console.log(typedLocation);
-    console.log(e.target.value);
     setTypedLocation(e.target.value);
   };
 
@@ -96,19 +87,6 @@ function CreateRestaurant() {
         return response.json();
       })
       .then((data) => {
-        console.log("API Response:", data); // Check the structure of the response
-
-        // if (data) {
-        //   // const place = location.properties.formatted;
-        //   // const lat = location.properties.lat;
-        //   // const lon = location.properties.lon;
-        //   // console.log(`Latitude: ${lat}, Longitude: ${lon}`);
-
-        //
-        //   console.log(data);
-        // } else {
-        //   console.error("Location not found!");
-        // }
         if (data && data.features && data.features.length > 0) {
           setLocationsResult(data); // Update state with valid data
         } else {
@@ -129,7 +107,6 @@ function CreateRestaurant() {
   };
 
   const chooseLocation = (e) => {
-    console.log(e.target.value);
     setSelectedLocation({
       address: e.target.dataset.address,
       coordinates: e.target.value,
@@ -170,7 +147,6 @@ function CreateRestaurant() {
   }, []);
 
   useEffect(() => {
-    console.log("Updated locationsResult:", locationsResult);
   }, [locationsResult]);
 
   return (
