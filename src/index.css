@@ -26,18 +26,16 @@
   @apply text-secondary bg-white px-2 py-1;
 }
 
-.navLink:hover {
+.navLink.active {
   @apply bg-secondary text-white;
+}
+
+.navLink:hover {
+  @apply bg-primaryMild text-white;
 }
 
 .custButton {
   @apply bg-secondary text-white px-1 py-[2px] mt-2;
-  /* background-color: var(--secondary);
-  color: white;
-  padding: 2px;
-  padding-left: 4px;
-  padding-right: 4px;
-  margin-top: 8px; */
 }
 
 .custButton:hover {

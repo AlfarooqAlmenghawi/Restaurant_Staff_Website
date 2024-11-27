@@ -9,6 +9,7 @@ export default {
         tertiary: "#df2935",
         quaternary: "#fdca40",
         quinary: "#e6e8e6",
+        primaryMild: "#80a5ff",
       },
     },
   },

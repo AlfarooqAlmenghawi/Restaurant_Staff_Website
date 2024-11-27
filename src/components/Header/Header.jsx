@@ -22,7 +22,7 @@ function Header() {
 
   return (
     <div className="border-b-4 border-secondary">
-      <div className="flex items-end px-[20vw] sm:max-lg:w-[614px] sm:max-lg:px-0 sm:max-lg:mx-auto">
+      <div className="flex items-end px-[20vw] sm:max-xl:w-[768px] sm:max-xl:px-0 sm:max-xl:mx-auto">
         <Logo className="mt-4 w-20 aspect-auto" />
         <div className="flex flex-col ml-auto items-end">
           {session?.restaurant_id && (
@@ -38,8 +38,9 @@ function Header() {
             <NavLink className="navLink" to="/restaurant-new">
               Create New Restaurant
             </NavLink>
-            <NavLink className="navLink" to="/go-live">
-              Go Live
+
+            <NavLink className="navLink" to="/settings">
+              Restaurant Settings
             </NavLink>
             {session?.user ? (
               <>
