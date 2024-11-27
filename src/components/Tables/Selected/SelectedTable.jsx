@@ -41,7 +41,7 @@ function SelectedTable({
       .rpc("create_booking", {
         customer_id: user.id,
         chosen_table_id: selectedTable.table_id,
-        customer_info: "toggled in",
+        customer_info: null,
         group_size: 2,
         booking_type: 1,
         booking_time: moment().format("YYYY-MM-DD HH:mm:ss+00"),

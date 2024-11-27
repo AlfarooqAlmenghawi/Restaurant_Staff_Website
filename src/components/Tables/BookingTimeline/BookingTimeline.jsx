@@ -14,6 +14,7 @@ import SelectedTable from "../Selected/SelectedTable";
 import BookingForm from "../BookingForm/BookingForm.jsx";
 import supabase from "../../../../supabaseClient.js";
 import { useAuth } from "../../../hooks/Auth.jsx";
+import BeatLoader from "react-spinners/BeatLoader.js";
 
 const BookingTimeline = () => {
   const [groups, setGroups] = useState([]);
@@ -32,7 +33,7 @@ const BookingTimeline = () => {
 
   const [updater, setUpdater] = useState(0);
 
-  const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(false);
 
   const {
     session: { restaurant_id },
@@ -77,7 +78,7 @@ const BookingTimeline = () => {
           return {
             id: booking.booking_id,
             group: booking.table_id,
-            title: "booking",
+            title: `${moment(booking.duration.slice(2, 24)).format("HH:mm")}`,
             start_time: moment(booking.duration.slice(2, 24)),
             end_time: moment(booking.duration.slice(27, 49)),
             canMove: false,
@@ -88,7 +89,7 @@ const BookingTimeline = () => {
         return Promise.all([bookingArr, setGroups(allTables)]);
       })
       .then(([bookingArr]) => {
-        setLoaded(true)
+        setLoaded(true);
         return setTimelineEntries(bookingArr);
       });
 
@@ -140,7 +141,9 @@ const BookingTimeline = () => {
                 return {
                   id: booking.booking_id,
                   group: booking.table_id,
-                  title: "booking",
+                  title: `${moment(booking.duration.slice(2, 24)).format(
+                    "HH:mm"
+                  )}`,
                   start_time: moment(booking.duration.slice(2, 24)),
                   end_time: moment(booking.duration.slice(27, 49)),
                   canMove: false,
@@ -151,7 +154,7 @@ const BookingTimeline = () => {
               return Promise.all([bookingArr]);
             })
             .then(([bookingArr]) => {
-              setLoaded(true)
+              setLoaded(true);
               return setTimelineEntries(bookingArr);
             });
         }
@@ -204,9 +207,9 @@ const BookingTimeline = () => {
         Tables
       </h3>
       <div className="">
-        {loaded && (
+        {loaded ? (
           <Timeline
-            className="mt-4 text-wrap"
+            className="mt-4 text-wrap shadow-lg "
             groups={groups}
             items={timelineEntries}
             defaultTimeStart={moment().add(-12, "hour")}
@@ -219,13 +222,13 @@ const BookingTimeline = () => {
               selectBookingHandler(itemId, e, time, bookings, tables);
             }}
           >
-            <TimelineHeaders style={{ backgroundColor: "#df2935" }}>
+            <TimelineHeaders style={{ backgroundColor: "#3772ff" }}>
               <SidebarHeader
-                style={{ backgroundColor: "#df2935" }}
+                style={{ backgroundColor: "#3772ff" }}
               ></SidebarHeader>
               <DateHeader
                 unit="primaryHeader"
-                style={{ backgroundColor: "#df2935" }}
+                style={{ backgroundColor: "#3772ff" }}
               />
               {({ getRootProps, data }) => {
                 return <div {...getRootProps()}> {data.someData}</div>;
@@ -237,6 +240,10 @@ const BookingTimeline = () => {
               <CursorMarker />
             </TimelineMarkers>
           </Timeline>
+        ) : (
+          <div className="flex justify-center">
+            <BeatLoader className="justify-self-center mt-6" />
+          </div>
         )}
         {typeSelected === 1 ? (
           <SelectedBooking
