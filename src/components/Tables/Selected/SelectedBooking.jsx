@@ -5,7 +5,7 @@ import { FaPhoneAlt, FaCrown, FaWalking, FaClock } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 import Icon from "../../../svgs/icon.svg?react";
 
-function SelectedBooking({ selectedBooking, selectedTable, setTypeSelected }) {
+function SelectedBooking({ selectedBooking, selectedTable, setTypeSelected, setTables }) {
   const [bookingType, setBookingType] = useState("");
 
   const [typeIcon, setTypeIcon] = useState(<FaPhoneAlt />);
@@ -52,8 +52,10 @@ function SelectedBooking({ selectedBooking, selectedTable, setTypeSelected }) {
           <FaPeopleGroup className="mr-1" />
           <b>Party Size:</b> {selectedBooking.party_size}
         </p>
-        {selectedBooking.extraInfo ? (
-          <p>Extra Information from Customer: {selectedBooking.extra_info}</p>
+        {selectedBooking.extra_info !== null ? (
+          <p>
+            <b>Message:</b> {selectedBooking.extra_info}
+          </p>
         ) : null}
         <p className="flex">
           {typeIcon}
