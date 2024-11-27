@@ -32,6 +32,8 @@ const BookingTimeline = () => {
 
   const [updater, setUpdater] = useState(0);
 
+  const [loaded, setLoaded] = useState(false)
+
   const {
     session: { restaurant_id },
   } = useAuth();
@@ -86,6 +88,7 @@ const BookingTimeline = () => {
         return Promise.all([bookingArr, setGroups(allTables)]);
       })
       .then(([bookingArr]) => {
+        setLoaded(true)
         return setTimelineEntries(bookingArr);
       });
 
@@ -148,6 +151,7 @@ const BookingTimeline = () => {
               return Promise.all([bookingArr]);
             })
             .then(([bookingArr]) => {
+              setLoaded(true)
               return setTimelineEntries(bookingArr);
             });
         }
@@ -179,7 +183,6 @@ const BookingTimeline = () => {
   };
 
   const selectTableHandler = (e, tables) => {
-    console.log(tables);
     const currentTable = tables?.filter((table) => {
       return Number(table.table_id) === Number(e.target.value);
     })[0];
@@ -191,18 +194,19 @@ const BookingTimeline = () => {
         bookingStatus = booking_id;
       }
     });
-    console.log({ ...currentTable, bookingStatus });
     setSelectedTable({ ...currentTable, bookingStatus });
     setTypeSelected(2);
   };
 
   return (
     <div>
-      <h3 className="text-4xl font-bold">Tables:</h3>
-      <div className="mr-6 ml-6">
-        {groups.length && timelineEntries.length && (
+      <h3 className="text-4xl py-2 font-bold border-b-4 border-secondary">
+        Tables
+      </h3>
+      <div className="">
+        {loaded && (
           <Timeline
-            className="border-primary border-2 text-wrap"
+            className="mt-4 text-wrap"
             groups={groups}
             items={timelineEntries}
             defaultTimeStart={moment().add(-12, "hour")}
@@ -242,6 +246,8 @@ const BookingTimeline = () => {
           />
         ) : typeSelected === 2 ? (
           <SelectedTable
+            tables={tables}
+            setTables={setTables}
             selectedTable={selectedTable}
             setSelectedTable={setSelectedTable}
             setUpdater={setUpdater}
