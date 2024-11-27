@@ -9,14 +9,15 @@ function Header() {
   const { user, session, signOut } = useAuth();
   const [currentRestaurant, setCurrentRestaurant] = useState("");
   useEffect(() => {
-    !isNaN(session?.restaurant_id) &&
-      supabase
-        .from("restaurants")
-        .select("*, restaurant_cuisines(*)")
-        .eq("restaurant_id", session?.restaurant_id)
-        .then(({ data, error }) => {
-          setCurrentRestaurant(data[0].restaurant_name);
-        });
+    !isNaN(session?.restaurant_id)
+      ? supabase
+          .from("restaurants")
+          .select("*, restaurant_cuisines(*)")
+          .eq("restaurant_id", session?.restaurant_id)
+          .then(({ data, error }) => {
+            setCurrentRestaurant(data[0].restaurant_name);
+          })
+      : setCurrentRestaurant(null);
   }, [session]);
 
   return (

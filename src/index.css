@@ -11,11 +11,19 @@
 }
 
 .authInput {
-  @apply border-2 border-secondary px-2 py-1 w-full;
+  @apply border-2 border-secondary px-2 py-1 w-full transition-colors focus-within:outline-none focus-within:border-tertiary;
 }
 
 .authSubmit {
-  @apply px-2 py-1 bg-secondary text-white w-full;
+  @apply px-2 py-1 bg-secondary text-white w-full transition-all;
+}
+
+.authSubmit:hover {
+  @apply filter brightness-90;
+}
+
+.authSubmit:disabled {
+  @apply filter brightness-150;
 }
 
 .authForm {
@@ -27,7 +35,7 @@
 }
 
 .navLink {
-  @apply text-secondary bg-white px-2 py-1;
+  @apply text-secondary bg-white px-2 py-1 transition-colors;
 }
 
 .navLink.active {
