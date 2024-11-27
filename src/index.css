@@ -22,6 +22,10 @@
   @apply flex flex-col items-center shadow-2xl px-14 py-12 gap-8 bg-gradient-to-br from-slate-200 to-zinc-300 w-[26rem];
 }
 
+.boxStyle {
+  @apply shadow-2xl p-4 gap-8 bg-gradient-to-br from-slate-200 to-zinc-300;
+}
+
 .navLink {
   @apply text-secondary bg-white px-2 py-1;
 }
@@ -42,11 +46,6 @@
   background-color: var(--tertiary);
 }
 
-.selectBox {
-  border: solid 2px var(--primary);
-  border-top: solid 0px;
-  padding: 10px;
-}
 
 .inputBox {
   @apply border-2 text-base font-normal;

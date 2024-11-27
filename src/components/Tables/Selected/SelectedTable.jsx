@@ -2,8 +2,13 @@ import moment from "moment";
 import { useAuth } from "../../../hooks/Auth";
 import supabase from "../../../../supabaseClient";
 
-
-function SelectedTable({ selectedTable, setSelectedTable, setUpdater }) {
+function SelectedTable({
+  selectedTable,
+  setSelectedTable,
+  setUpdater,
+  tables,
+  setTables,
+}) {
   const {
     user,
     session: { restaurant_id },
@@ -17,6 +22,17 @@ function SelectedTable({ selectedTable, setSelectedTable, setUpdater }) {
       .then((data, error) => {
         const newUpdate = selectedTable.table_id;
         setUpdater(newUpdate);
+        const updatedTable = { ...selectedTable };
+        updatedTable.bookingStatus = null;
+        console.log(updatedTable.bookingStatus);
+        setSelectedTable(updatedTable);
+        const newTables = [...tables];
+        newTables.forEach(({ table, index }) => {
+          if (table.table_id === selectedTable.table_id) {
+            newTables[index] = updatedTable;
+          }
+        });
+        setTables(newTables);
       });
   };
 
@@ -32,13 +48,24 @@ function SelectedTable({ selectedTable, setSelectedTable, setUpdater }) {
         chosen_restaurant_id: restaurant_id,
       })
       .then(({ data, error }) => {
+        console.log(data);
         setUpdater(selectedTable.bookingStatus);
+        const updatedTable = { ...selectedTable };
+        updatedTable.bookingStatus = data[0].booking_id;
+        setSelectedTable(updatedTable);
         console.error(error);
+        const newTables = [...tables];
+        newTables.forEach(({ table, index }) => {
+          if (table.table_id === selectedTable.table_id) {
+            newTables[index] = updatedTable;
+          }
+        });
+        setTables(newTables);
       });
   };
 
   return (
-    <div className="@apply selectBox">
+    <div className="boxStyle mt-4">
       <p className="font-bold">{selectedTable.table_name}</p>
       <p>Seats {selectedTable.size}</p>
       {selectedTable.bookingStatus ? (

@@ -6,8 +6,6 @@ import { FaPeopleGroup } from "react-icons/fa6";
 import Icon from "../../../svgs/icon.svg?react";
 
 function SelectedBooking({ selectedBooking, selectedTable, setTypeSelected }) {
-  const [bookingExistence, setBookingExistence] = useState(true);
-
   const [bookingType, setBookingType] = useState("");
 
   const [typeIcon, setTypeIcon] = useState(<FaPhoneAlt />);
@@ -18,11 +16,7 @@ function SelectedBooking({ selectedBooking, selectedTable, setTypeSelected }) {
       .delete()
       .eq("booking_id", selectedBooking.booking_id)
       .then(({ data, error }) => {
-        if (error) {
-          console.error("Delete Error: ", error);
-        } else {
-          setBookingExistence(false);
-        }
+        console.error("Delete Error: ", error);
         setTypeSelected(0);
       })
       .catch((error) => {
@@ -44,7 +38,7 @@ function SelectedBooking({ selectedBooking, selectedTable, setTypeSelected }) {
   }, [selectedBooking]);
   return (
     <>
-      <div id="selected-booking" className="@apply selectBox">
+      <div id="selected-booking" className="boxStyle mt-4">
         <p>
           <b>{selectedTable.table_name}</b>
         </p>

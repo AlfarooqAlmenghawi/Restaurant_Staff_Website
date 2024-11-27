@@ -117,7 +117,7 @@ function BookingForm({ tables, selectedTable }) {
 
   return (
     <>
-      <div className="border-spacing-4 border-2 border-primary m-6 p-4 ">
+      <div className="mt-6 boxStyle">
         <h3 className="font-bold text-lg">New Booking</h3>
         <form className="grid grid-cols-3 gap-2">
           <label className="flex flex-col font-bold">
