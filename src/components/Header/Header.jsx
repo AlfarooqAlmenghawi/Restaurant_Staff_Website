@@ -9,13 +9,12 @@ function Header() {
   const { user, session, signOut } = useAuth();
   const [currentRestaurant, setCurrentRestaurant] = useState("");
   useEffect(() => {
-    session?.restaurant_id &&
+    !isNaN(session?.restaurant_id) &&
       supabase
         .from("restaurants")
         .select("*, restaurant_cuisines(*)")
         .eq("restaurant_id", session?.restaurant_id)
         .then(({ data, error }) => {
-          console.log(data || error);
           setCurrentRestaurant(data[0].restaurant_name);
         });
   }, [session]);
@@ -25,7 +24,7 @@ function Header() {
       <div className="flex items-end px-[20vw] sm:max-xl:w-[768px] sm:max-xl:px-0 sm:max-xl:mx-auto">
         <Logo className="mt-4 w-20 aspect-auto" />
         <div className="flex flex-col ml-auto items-end">
-          {session?.restaurant_id && (
+          {currentRestaurant && (
             <h1 className="inline">Selected Restaurant: {currentRestaurant}</h1>
           )}
           <nav className="flex justify-end">
@@ -42,7 +41,7 @@ function Header() {
             <NavLink className="navLink" to="/settings">
               Restaurant Settings
             </NavLink>
-            {session?.user ? (
+            {user ? (
               <>
                 <button onClick={signOut} className="navLink">
                   Sign Out
