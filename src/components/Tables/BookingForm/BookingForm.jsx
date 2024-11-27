@@ -91,6 +91,11 @@ function BookingForm({ tables, selectedTable }) {
           chosen_restaurant_id: restaurant_id,
         })
         .then(({ data, error }) => {
+          setNewBookingInfo({ extra_info: "", party_size: 0 });
+          setStartTime("");
+          setEndTime("");
+          setBookingDate();
+          moment().format("YYYY-MM-DD");
           console.error(error);
         });
     }
@@ -123,6 +128,7 @@ function BookingForm({ tables, selectedTable }) {
           <label className="flex flex-col font-bold">
             Start Time *
             <TimeInput
+              value={startTime}
               hourCycle={24}
               className="flex"
               onChange={changeStartTime}
@@ -131,6 +137,7 @@ function BookingForm({ tables, selectedTable }) {
           <label className="flex flex-col font-bold">
             End Time
             <TimeInput
+              value={endTime}
               className="font-normal"
               hourCycle={24}
               onChange={changeEndTime}
@@ -139,6 +146,7 @@ function BookingForm({ tables, selectedTable }) {
           <label className="flex flex-col font-bold">
             <b>Date:</b>
             <input
+              value={bookingDate}
               type="date"
               onChange={changeDateHandler}
               min={moment().format("YYYY-MM-DD")}
@@ -194,6 +202,7 @@ function BookingForm({ tables, selectedTable }) {
           <label className="flex flex-col font-semibold col-span-2">
             Message
             <textarea
+              value={newBookingInfo.extra_info}
               className="border-[1px] font-normal"
               id="extra_info"
               onChange={changeValue}

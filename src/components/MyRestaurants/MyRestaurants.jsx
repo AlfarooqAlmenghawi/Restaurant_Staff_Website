@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import supabase from "../../../supabaseClient";
 import { useAuth } from "../../hooks/Auth";
-import { Link, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { RestaurantCard } from "./RestaurantCard";
+import BarLoader from "react-spinners/BarLoader";
 
 function MyRestaurants() {
+  const navigate = useNavigate();
+
   const [restaurantsOfStaff, setRestaurantsOfStaff] = useState([]);
   const {
     user,
@@ -13,6 +16,7 @@ function MyRestaurants() {
   } = useAuth();
 
   function newRestaurantHandler() {
+    console.log("click");
     navigate("/restaurant-new");
   }
 
@@ -28,21 +32,28 @@ function MyRestaurants() {
 
   return (
     <>
-      <h3 className="font-bold text-2xl border-y-4 px-4">Your Restaurants</h3>
-      <div className="flex bg flex-wrap gap-4 mt-6">
-        {restaurantsOfStaff?.map(({ restaurants }) => (
-          <RestaurantCard
-            {...restaurants}
-            isSelected={restaurant_id === restaurants.restaurant_id}
-          />
-        ))}
-        <button
-          className="border-4 hover:border-tertiary flex p-2 size-[10.5rem] bg-quinary justify-center items-center rounded-lg"
-          onClick={newRestaurantHandler}
-        >
-          <FaPlus className="size-20" />
-        </button>
-      </div>
+      <h3 className="pageTitle">Your Restaurants</h3>
+      {restaurantsOfStaff.length ? (
+        <div className="flex bg flex-wrap gap-4 mt-6">
+          {restaurantsOfStaff?.map(({ restaurants }) => (
+            <RestaurantCard
+              key={restaurants.restaurant_id}
+              {...restaurants}
+              isSelected={restaurant_id === restaurants.restaurant_id}
+            />
+          ))}
+          <button
+            className="border-4 hover:border-tertiary flex p-2 size-[10.5rem] bg-quinary justify-center items-center rounded-lg"
+            onClick={newRestaurantHandler}
+          >
+            <FaPlus className="size-20" />
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center mt-20">
+          <BarLoader />
+        </div>
+      )}
     </>
   );
 }
