@@ -25,7 +25,7 @@ function Header() {
         <Logo className="mt-4 w-20 aspect-auto" />
         <div className="flex flex-col ml-auto items-end">
           {currentRestaurant && (
-            <h1 className="inline">Selected Restaurant: {currentRestaurant}</h1>
+            <h1 className="inline text-xl font-bold"> {currentRestaurant}</h1>
           )}
           <nav className="flex justify-end">
             <NavLink className="navLink" to="/my-restaurants">
@@ -34,8 +34,8 @@ function Header() {
             <NavLink className="navLink" to="/tables">
               Tables
             </NavLink>
-            <NavLink className="navLink" to="/restaurant-new">
-              Create New Restaurant
+            <NavLink className="navLink" to="/profile">
+              Edit Profile
             </NavLink>
 
             <NavLink className="navLink" to="/settings">

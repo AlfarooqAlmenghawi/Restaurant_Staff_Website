@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import supabase from "../../../supabaseClient";
 import { useAuth } from "../../hooks/Auth";
+import BeatLoader from "react-spinners/BeatLoader";
+import { useNavigate } from "react-router-dom";
 
 function CreateRestaurant() {
   const { session } = useAuth();
@@ -17,6 +19,8 @@ function CreateRestaurant() {
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   const [old, setOld] = useState({ restaurant_cuisines: [] });
+
+  const navigate = useNavigate()
 
   const sendProfile = () => {
     const sendData = { ...current };
@@ -51,6 +55,7 @@ function CreateRestaurant() {
           .select()
           .then(({ data, error }) => {
             error ? console.log(error) : console.log(data);
+            navigate("/settings")
           });
       });
   };
@@ -154,7 +159,7 @@ function CreateRestaurant() {
       <div className="py-4 border-y-2 grid grid-cols-2 mx-2 gap-4">
         <h4 className="profileSectionTitle">Profile</h4>
         <label className="profileOption col-span-2">
-          Restaurant Name
+          Restaurant Name *
           <input
             className="inputBox"
             id="restaurant_name"
@@ -234,7 +239,11 @@ function CreateRestaurant() {
               })}
             </ul>
           </div>
-        ) : null}
+        ) : (
+          <div className="flex flex-col items-center mt-10 w-full">
+            <BeatLoader />
+          </div>
+        )}
         <div>
           <h4 className="profileOption">Menu</h4>
           <label>
@@ -270,7 +279,7 @@ function CreateRestaurant() {
         <h4 className="profileSectionTitle">Contact Details</h4>
         <div>
           <label className="profileOption">
-            Location
+            Location *
             <input
               className="inputBox"
               id="location"
@@ -335,7 +344,7 @@ function CreateRestaurant() {
           />
         </label>
         <label className="profileOption">
-          Email
+          Email *
           <input
             className="inputBox"
             id="restaurant_email"

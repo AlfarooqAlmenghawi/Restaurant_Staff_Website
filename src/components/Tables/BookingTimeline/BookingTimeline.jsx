@@ -15,6 +15,7 @@ import BookingForm from "../BookingForm/BookingForm.jsx";
 import supabase from "../../../../supabaseClient.js";
 import { useAuth } from "../../../hooks/Auth.jsx";
 import BeatLoader from "react-spinners/BeatLoader.js";
+import { ErrMsg } from "../../Auth/ErrMsg.jsx";
 
 const BookingTimeline = () => {
   const [groups, setGroups] = useState([]);
@@ -184,6 +185,7 @@ const BookingTimeline = () => {
     ]);
     setTypeSelected(1);
   };
+
 
   const selectTableHandler = (e, tables) => {
     const currentTable = tables?.filter((table) => {
