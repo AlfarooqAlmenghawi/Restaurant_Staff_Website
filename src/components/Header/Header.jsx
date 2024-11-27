@@ -42,7 +42,7 @@ function Header() {
             <NavLink className="navLink" to="/settings">
               Restaurant Settings
             </NavLink>
-            {user ? (
+            {session ? (
               <>
                 <button onClick={signOut} className="navLink">
                   Sign Out
