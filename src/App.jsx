@@ -12,7 +12,6 @@ import Tables from "./components/Tables/Tables.jsx";
 import { SignIn } from "./components/Auth/SignIn.jsx";
 import { AuthProvider } from "./hooks/Auth.jsx";
 import { RootLayout } from "./layouts/RootLayout.jsx";
-import { signInAction } from "./components/Auth/SignIn.jsx";
 import { SignUp, signUpAction } from "./components/Auth/SignUp.jsx";
 import ProfileEdit from "./components/ProfileEdit/ProfileEdit.jsx";
 import MyRestaurants from "./components/MyRestaurants/MyRestaurants.jsx";
@@ -32,7 +31,7 @@ const router = createBrowserRouter(
           </ProtectedRoute>
         }
       />
-      <Route path="sign-in" element={<SignIn />} action={signInAction} />
+      <Route path="sign-in" element={<SignIn />} />
       <Route path="sign-up" element={<SignUp />} action={signUpAction} />
       <Route
         path="profile"
