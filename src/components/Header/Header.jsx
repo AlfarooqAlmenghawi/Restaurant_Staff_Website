@@ -38,8 +38,9 @@ function Header() {
             <NavLink className="navLink" to="/restaurant-new">
               Create New Restaurant
             </NavLink>
+
             <NavLink className="navLink" to="/settings">
-              Settings
+              Restaurant Settings
             </NavLink>
             {session?.user ? (
               <>
