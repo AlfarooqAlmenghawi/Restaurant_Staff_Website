@@ -75,3 +75,8 @@
   width: 500px;
   margin: auto;
 }
+
+
+.pageTitle {
+  @apply text-4xl py-2 font-bold border-b-4 border-secondary
+}
