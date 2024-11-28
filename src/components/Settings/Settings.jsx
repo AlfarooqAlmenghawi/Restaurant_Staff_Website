@@ -6,7 +6,7 @@ import { FaPlus } from "react-icons/fa";
 import { FaX } from "react-icons/fa6";
 
 function Settings() {
-  const { user, session } = useAuth();
+  const { user, session, updateRestaurant } = useAuth();
   const navigate = useNavigate();
 
   const RestaurantID = session.restaurant_id;
@@ -99,6 +99,7 @@ function Settings() {
       .select()
       .then(({ data }) => {
         console.log(data);
+        updateRestaurant(null);
         navigate("/my-restaurants");
       });
   };
