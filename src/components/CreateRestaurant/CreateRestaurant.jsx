@@ -5,7 +5,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 import { useNavigate } from "react-router-dom";
 
 function CreateRestaurant() {
-  const { session } = useAuth();
+  const { session, updateRestaurant } = useAuth();
   // const RestaurantID = session.restaurant_id;
 
   const [current, setCurrent] = useState({ restaurant_cuisines: [] });
@@ -20,7 +20,7 @@ function CreateRestaurant() {
 
   const [old, setOld] = useState({ restaurant_cuisines: [] });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const sendProfile = () => {
     const sendData = { ...current };
@@ -43,8 +43,9 @@ function CreateRestaurant() {
             restaurant_id: data[0].restaurant_id,
           })
           .select()
-          .then((data) => {
-            console.log(data);
+          .then(({ data }) => {
+            updateRestaurant(data[0].restaurant_id);
+            navigate("/settings");
           });
         newCuisines.forEach((cuisine) => {
           cuisine.restaurant_id = data[0].restaurant_id;
@@ -55,7 +56,6 @@ function CreateRestaurant() {
           .select()
           .then(({ data, error }) => {
             error ? console.log(error) : console.log(data);
-            navigate("/settings")
           });
       });
   };
@@ -355,7 +355,7 @@ function CreateRestaurant() {
         </label>
       </div>
       <button className="custButton" onClick={sendProfile}>
-        Update Restaurant
+        Create Restaurant
       </button>
     </main>
   );
