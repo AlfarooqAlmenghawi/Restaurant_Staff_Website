@@ -75,7 +75,7 @@
 }
 
 .delete-restaurant-button {
-  @apply text-white bg-red-500 text-xl px-12 py-4 mb-8;
+  @apply text-white bg-red-500 text-xl px-12 py-4 mb-8 hover:bg-red-600 transition-colors;
 }
 
 .pageTitle {
