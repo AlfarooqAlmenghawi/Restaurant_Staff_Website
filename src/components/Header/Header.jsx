@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/Auth";
 import "./Header.css";
 import { useEffect, useState } from "react";
@@ -8,6 +8,8 @@ import Logo from "../../svgs/logo.svg?react";
 function Header() {
   const { user, session, signOut } = useAuth();
   const [currentRestaurant, setCurrentRestaurant] = useState("");
+  const navigate = useNavigate();
+
   useEffect(() => {
     !isNaN(session?.restaurant_id)
       ? supabase
@@ -44,7 +46,13 @@ function Header() {
             </NavLink>
             {session ? (
               <>
-                <button onClick={signOut} className="navLink">
+                <button
+                  onClick={() => {
+                    signOut();
+                    navigate("/sign-in", { replace: true });
+                  }}
+                  className="navLink"
+                >
                   Sign Out
                 </button>
               </>

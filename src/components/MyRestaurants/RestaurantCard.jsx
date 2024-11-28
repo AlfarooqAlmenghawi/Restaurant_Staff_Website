@@ -33,8 +33,13 @@ export const RestaurantCard = ({
         <button className="custButton w-28" onClick={handleClick} id="/profile">
           Edit Profile
         </button>
-        <button className="custButton w-28 flex items-center justify-center gap-2" onClick={handleClick} id="/go-live">
-          Go Live {is_listed ? <IoCloudDoneSharp /> : <IoCloudOfflineOutline />}
+        <button
+          className="custButton w-28 flex items-center justify-center gap-2"
+          onClick={handleClick}
+          id="/go-live"
+        >
+          {is_listed ? "Listed" : "Unlisted"}
+          {is_listed ? <IoCloudDoneSharp /> : <IoCloudOfflineOutline />}
         </button>
       </div>
     </div>
