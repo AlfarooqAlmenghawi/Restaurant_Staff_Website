@@ -31,7 +31,11 @@
 }
 
 .boxStyle {
-  @apply shadow-2xl p-4 gap-8 bg-gradient-to-br from-slate-200 to-zinc-300;
+  @apply shadow-xl p-4 gap-8 bg-gradient-to-br from-slate-200 to-zinc-300;
+}
+
+.boxStyleSelected {
+  @apply shadow-2xl scale-105 p-4 gap-8 bg-gradient-to-br from-slate-200 to-zinc-300;
 }
 
 .navLink {
@@ -71,12 +75,9 @@
 }
 
 .delete-restaurant-button {
-  background-color: red;
-  width: 500px;
-  margin: auto;
+  @apply text-white bg-red-500 text-xl px-12 py-4 mb-8;
 }
 
-
 .pageTitle {
-  @apply text-4xl py-2 font-bold border-b-4 border-secondary
+  @apply text-4xl py-2 font-bold border-b-4 border-secondary;
 }

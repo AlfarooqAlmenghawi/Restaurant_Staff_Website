@@ -1,6 +1,7 @@
 import {
   createBrowserRouter,
   createRoutesFromElements,
+  Navigate,
   RouterProvider,
 } from "react-router-dom";
 import { Route } from "react-router-dom";
@@ -19,6 +20,7 @@ import Settings from "./components/Settings/Settings.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
+      <Route index element={<Navigate replace to="/sign-in" />} />
       <Route
         path="tables"
         element={
