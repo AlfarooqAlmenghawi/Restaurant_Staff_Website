@@ -9,9 +9,6 @@ import BarLoader from "react-spinners/BarLoader";
 
 function MyRestaurants() {
   const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(true);
-
   const [restaurantsOfStaff, setRestaurantsOfStaff] = useState([]);
   const [loading, setLoading] = useState(true);
   const hasRedirected = useLocation().state?.hasRedirected;
