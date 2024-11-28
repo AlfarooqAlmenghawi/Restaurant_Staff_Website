@@ -10,6 +10,8 @@ import BarLoader from "react-spinners/BarLoader";
 function MyRestaurants() {
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(true);
+
   const [restaurantsOfStaff, setRestaurantsOfStaff] = useState([]);
   const hasRedirected = useLocation().state?.hasRedirected;
   const {
@@ -31,13 +33,14 @@ function MyRestaurants() {
       .eq("user_id", user?.id)
       .then(({ data }) => {
         setRestaurantsOfStaff(data);
+        setLoading(false);
       });
   }, []);
 
   return (
     <>
       <h3 className="pageTitle">Your Restaurants</h3>
-      {restaurantsOfStaff.length ? (
+      {!loading ? (
         <div className="flex bg flex-wrap gap-4 mt-6">
           {restaurantsOfStaff?.map(({ restaurants }) => (
             <RestaurantCard
