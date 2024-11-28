@@ -35,7 +35,7 @@
 }
 
 .boxStyleSelected {
-  @apply shadow-2xl scale-105 p-4 gap-8 bg-gradient-to-br from-slate-200 to-zinc-300;
+  @apply shadow-2xl scale-105 p-4 gap-8 bg-gradient-to-br from-slate-300 to-zinc-400;
 }
 
 .navLink {
