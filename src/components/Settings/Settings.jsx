@@ -91,10 +91,6 @@ function Settings() {
       });
   };
 
-  const handleShowConfirmDelete = () => {
-    setShowConfirmDelete(!showConfirmDelete);
-  };
-
   const deleteRestaurant = () => {
     supabase
       .from("restaurants")
@@ -215,13 +211,13 @@ function Settings() {
                 {tablesOfTheCurrentRestaurant.map((table) => {
                   return (
                     <tr className="odd:bg-slate-100 even:bg-zinc-200">
-                      <td className="px-8 py-4 text-center border-r-[1px] border-slate-700">
+                      <td className="px-8 py-3 text-center border-r-[1px] border-slate-700">
                         {table.table_name}
                       </td>
-                      <td className="px-8 py-4 text-center">{table.size}</td>
-                      <td className="px-8 py-4 text-center border-l-[1px] border-slate-700">
+                      <td className="px-8 py-3 text-center">{table.size}</td>
+                      <td className="px-8 py-3 text-center border-l-[1px] border-slate-700">
                         <button
-                          className="bg-red-500 text-white px-4 py-2 hover:bg-red-300 focus:bg-red-200"
+                          className="bg-red-500 text-white px-4 py-2 hover:bg-red-600 transition-colors"
                           id={table.table_id}
                           onClick={deleteTable}
                         >
@@ -244,11 +240,32 @@ function Settings() {
             <br></br>
             <button
               className="delete-restaurant-button"
-              onClick={handleShowConfirmDelete}
+              onClick={() => setShowConfirmDelete(true)}
             >
               DELETE THIS RESTAURANT
             </button>
-            {/* <div className=><div class><FaX /></div></div> */}
+            {showConfirmDelete && (
+              <div className="flex flex-col items-center absolute mx-auto top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] size-72 bg-gradient-to-br from-slate-200 to-zinc-300 shadow-[0_0_0_1000px_rgba(0,0,0,0.3)]">
+                <div className="flex justify-end w-full p-4">
+                  <FaX
+                    className="text-slate-600 size-6 cursor-pointer"
+                    onClick={() => setShowConfirmDelete(false)}
+                  />
+                </div>
+                <p className="px-8 py-4 text-center">
+                  Are you sure you want to delete the following restaurant?
+                </p>
+                <p className="text-center font-bold">
+                  {currentRestaurant.restaurant_name}
+                </p>
+                <button
+                  onClick={deleteRestaurant}
+                  className=" bg-red-500 text-white py-2 px-8 hover:bg-red-600 transition-colors mt-6"
+                >
+                  Confirm
+                </button>
+              </div>
+            )}
           </div>
         </>
       ) : (
