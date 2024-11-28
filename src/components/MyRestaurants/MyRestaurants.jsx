@@ -13,6 +13,7 @@ function MyRestaurants() {
   const [loading, setLoading] = useState(true);
 
   const [restaurantsOfStaff, setRestaurantsOfStaff] = useState([]);
+  const [loading, setLoading] = useState(true);
   const hasRedirected = useLocation().state?.hasRedirected;
   const {
     user,
@@ -20,11 +21,11 @@ function MyRestaurants() {
   } = useAuth();
 
   function newRestaurantHandler() {
-    console.log("click");
     navigate("/restaurant-new");
   }
 
   useEffect(() => {
+    setLoading(true);
     hasRedirected &&
       toast.error("Sorry, you need to select a restaurant first");
     supabase
@@ -50,10 +51,11 @@ function MyRestaurants() {
             />
           ))}
           <button
-            className="border-4 transition-colors hover:border-tertiary flex p-2 size-[10.5rem] bg-quinary justify-center items-center rounded-lg"
+            className="boxStyle flex flex-col transition-all h-[19.75rem] w-44 justify-center items-center hover:shadow-2xl hover:scale-105"
             onClick={newRestaurantHandler}
           >
-            <FaPlus className="size-20" />
+            <FaPlus className="size-20 mb-12" />
+            <p className="w-20">Add new restaurant</p>
           </button>
         </div>
       ) : (

@@ -20,10 +20,9 @@ export const RestaurantCard = ({
   return (
     <div
       onClick={handleClick}
-      // className={`border-4 flex p-2 w-80px/4 bg-quinary rounded-lg gap-2 transition-colors hover:border-tertiary ${
-      //   isSelected && "border-quaternary"
-      // }`}
-      className="boxStyle"
+      className={`transition-all ease-in-out ${
+        isSelected ? "boxStyleSelected" : "boxStyle"
+      } hover:shadow-2xl hover:scale-105`}
     >
       <img className="w-48 h-36 object-cover" src={restaurant_img} />
       <div className="flex flex-col">
