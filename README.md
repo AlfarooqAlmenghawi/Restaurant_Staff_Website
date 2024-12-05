@@ -30,11 +30,11 @@ You must create an account to create and manage restaurants. After filling in th
 
 ## Credits
 
-**Alfarooq Almenghawi** - Creating Restaurant, Restaurant Settings and Restaurant edit functionality.
+[**Alfarooq Almenghawi**](https://github.com/AlfarooqAlmenghawi) - Creating Restaurant, Restaurant Settings and Restaurant edit functionality.
 
-**Xander Waring** - Booking Timeline, Tables and Making a booking functionality.
+[**Xander Waring**](https://github.com/AlexanderThePrettyDecent) - Booking Timeline, Tables and Making a booking functionality.
 
-**Jack Hansjee** - Backend Authentication implementation, Sign in and account creation functionality.
+[**Jack Hansjee**](https://github.com/jansg08) - Backend Authentication implementation, Sign in and account creation functionality.
 
 ## License
 
