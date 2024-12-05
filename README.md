@@ -1,6 +1,4 @@
-# Name of Project:
-
-**Late Plate (Restaurant Availability App)**
+# **Late Plate (Restaurant Availability App)**
 
 ### Description
 
